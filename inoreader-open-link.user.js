@@ -29,7 +29,7 @@
     1:'Expanded',
     2:'Column',
     3:'Card',      // Supported
-    4:'Magazine',
+    4:'Magazine',  // Supported
   }
 
   function isMode(modeStr) {
