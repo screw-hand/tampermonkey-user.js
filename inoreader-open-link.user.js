@@ -18,10 +18,6 @@
     * dashbord page is comming soon ...
     */
 
-  /* global $ */
-
-  debugger
-
   const scriptName = 'inoreader-open-link';
   const openMode = '_blank';
   const view_style_config = {
