@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         inoreader-open-link
-// @namespace    http://screw-hand.net/
+// @namespace    http://screw-hand.com/
 // @version      0.1
 // @description  support inoreader web to open the link.
 // @author       screw-hand
@@ -74,9 +74,9 @@
     console.log("dialog");
     const flag = arguments[0] === "article_dialog";
     console.log({ flag });
-    if (isMode('Card') && falg) {
+    if (isMode('Card') && flag) {
       return cardModeOpenLink(event);
-    } else if (isMode('Magazine') && falg) {
+    } else if (isMode('Magazine') && flag) {
       return magazineModeOpenLink(event);
     }
     return originalDialog.apply(this, arguments);
