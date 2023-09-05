@@ -1,12 +1,25 @@
 // ==UserScript==
 // @name         inoreader-open-link
 // @namespace    http://screw-hand.com/
+// @version      0.2
+// @description  support inoreader web to open the link.
+// @author       screw-hand
+// @match        https://www.inoreader.com/*
+// @icon         https://www.inoreader.com/favicon.ico?v=8
+// @grant        none
+// @licence      // ==UserScript==
+// @name         inoreader-open-link
+// @namespace    http://screw-hand.com/
 // @version      0.1
 // @description  support inoreader web to open the link.
 // @author       screw-hand
 // @match        https://www.inoreader.com/*
 // @icon         https://www.inoreader.com/favicon.ico?v=8
 // @grant        none
+// @licence      MIT
+// @updateURL    https://github.com/screw-hand/tampermonkey-user.js/raw/main/inoreader-open-link.user.js
+// @downloadURL  https://github.com/screw-hand/tampermonkey-user.js/raw/main/inoreader-open-link.user.js
+// @supportURL   https://github.com/screw-hand/tampermonkey-user.js/issues/new
 // ==/UserScript==
 
 (function () {
