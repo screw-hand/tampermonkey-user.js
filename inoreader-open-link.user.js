@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         inoreader-open-link
 // @namespace    http://screw-hand.com/
-// @version      0.2
+// @version      0.3
 // @description  support inoreader web to open the link.
 // @author       screw-hand
 // @match        https://www.inoreader.com/*
@@ -16,7 +16,7 @@
 (function () {
   'use strict';
   /**
-    * now only for Layout of Card View
+    * now only for Layout of List, Card, Magazine View
     * and only for https://www.inoreader.com/feed/
     * other layout is comming soon ...
     * dashbord page is comming soon ...
@@ -100,7 +100,12 @@
     } else if (isMode('Magazine')) {
       return magazineModeOpenLink(event);
     }
-    return original_toggle_articleview.apply(this, arguments);
+    const original_scroll_to_article = window.scroll_to_article;
+    scroll_to_article = () => undefined;
+    original_toggle_articleview.apply(this, arguments);
+    setTimeout(() => {
+      window.scroll_to_article = original_scroll_to_article
+    }, 300);
   }
 
   const original_article_click_trap_async = window.article_click_trap_async;
