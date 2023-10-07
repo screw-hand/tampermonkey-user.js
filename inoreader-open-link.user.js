@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         inoreader-open-link
 // @namespace    http://screw-hand.com/
-// @version      0.3
+// @version      0.4
 // @description  support inoreader web to open the link.
 // @author       screw-hand
 // @match        https://www.inoreader.com/*
@@ -45,30 +45,35 @@
     const is_target_article_title_picture = e.target.classList.contains(article_title_picture.substring(1));
     if (is_target_article_title_link || is_target_article_title_picture) {
       const article_title_content_wraper = '.article_tile_content_wraper';
-      const is_target_closest_wraper = e.target.closest(article_title_content_wraper);
-      if (is_target_closest_wraper) {
+      const target_closest_wraper = e.target.closest(article_title_content_wraper);
+      const article_subscribed = e.target.closest('.article_subscribed');
+      if (target_closest_wraper) {
         const href = e.target.href || e.target.parentElement.href;
         // TODO make the open in new tab is option that user could setting
         window.open(href, openMode)
+      }
+      if (article_subscribed) {
+        const a_mark_read = article_subscribed.querySelector('a[onclick^=mark_read]')
+        a_mark_read && a_mark_read.onclick()
       }
     }
   }
 
   function listViewOpenLink(e) {
     const article_header_text = '.article_header_text';
-    const is_target = e.target.closest(article_header_text);
-    if (is_target) {
-      const link = is_target.querySelector('a')?.href;
+    const target = e.target.closest(article_header_text);
+    if (target) {
+      const link = target.querySelector('a')?.href;
       link && window.open(link, openMode)
     }
   }
 
   function magazineModeOpenLink(e) {
     const article_magazine_content_wraper = '.article_magazine_content_wraper';
-    const is_target = e.target.closest(article_magazine_content_wraper);
-    if (is_target) {
-      const link = is_target.querySelector('a')?.href;
-      link && event.preventDefault();
+    const target = e.target.closest(article_magazine_content_wraper);
+    if (target) {
+      const link = target.querySelector('a')?.href;
+      link && e.preventDefault();
       link && window.open(link, openMode);
     }
   }
