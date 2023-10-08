@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name         inoreader-open-link
-// @namespace    http://screw-hand.com/
-// @version      0.5
+// @namespace    https://screw-hand.com/
+// @version      0.6
 // @description  support inoreader web to open the link.
 // @author       screw-hand
 // @match        https://www.inoreader.com/*
 // @icon         https://www.inoreader.com/favicon.ico?v=8
 // @grant        none
-// @licence      MIT
+// @homepage     https://github.com/screw-hand/tampermonkey-user.js
 // @updateURL    https://github.com/screw-hand/tampermonkey-user.js/raw/main/inoreader-open-link.user.js
-// @downloadURL  https://github.com/screw-hand/tampermonkey-user.js/raw/main/inoreader-open-link.user.js
+// @downloadURL  https://github.com/screw-hand/tampermonkey-user.js/blob/main/inoreader-open-link.user.js
 // @supportURL   https://github.com/screw-hand/tampermonkey-user.js/issues/new
 // ==/UserScript==
 
@@ -24,6 +24,7 @@
 
   const scriptName = 'inoreader-open-link';
   const openMode = '_blank';
+	/* eslint-disable no-multi-spaces */
   const view_style_config = {
     0:'List',      // Supported
     1:'Expanded',
@@ -31,6 +32,7 @@
     3:'Card',      // Supported
     4:'Magazine',  // Supported
   }
+	/* eslint-enable no-multi-spaces */
 
   function isMode(modeStr) {
     const currentMode = view_style_config[window.view_style];
@@ -106,7 +108,7 @@
       return;
     }
     const original_scroll_to_article = window.scroll_to_article;
-    scroll_to_article = () => undefined;
+    window.scroll_to_article = () => undefined;
     original_toggle_articleview.apply(this, arguments);
     setTimeout(() => {
       window.scroll_to_article = original_scroll_to_article
