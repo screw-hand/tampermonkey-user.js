@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         inoreader-open-link
 // @namespace    http://screw-hand.com/
-// @version      0.4
+// @version      0.5
 // @description  support inoreader web to open the link.
 // @author       screw-hand
 // @match        https://www.inoreader.com/*
@@ -103,7 +103,7 @@
         return listViewOpenLink(event);
       }
     } else if (isMode('Magazine')) {
-      return magazineModeOpenLink(event);
+      return;
     }
     const original_scroll_to_article = window.scroll_to_article;
     scroll_to_article = () => undefined;
