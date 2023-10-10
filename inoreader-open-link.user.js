@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         inoreader-open-link
 // @namespace    https://screw-hand.com/
-// @version      0.6
+// @version      0.7
 // @description  support inoreader web to open the link.
 // @author       screw-hand
 // @match        https://www.inoreader.com/*
@@ -9,7 +9,7 @@
 // @grant        none
 // @homepage     https://github.com/screw-hand/tampermonkey-user.js
 // @updateURL    https://github.com/screw-hand/tampermonkey-user.js/raw/main/inoreader-open-link.user.js
-// @downloadURL  https://github.com/screw-hand/tampermonkey-user.js/blob/main/inoreader-open-link.user.js
+// @downloadURL  https://github.com/screw-hand/tampermonkey-user.js/raw/main/inoreader-open-link.user.js
 // @supportURL   https://github.com/screw-hand/tampermonkey-user.js/issues/new
 // ==/UserScript==
 
