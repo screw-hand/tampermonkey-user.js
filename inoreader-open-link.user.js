@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         inoreader-open-link
 // @namespace    https://screw-hand.com/
-// @version      0.7
+// @version      0.8
 // @description  support inoreader web to open the link.
 // @author       screw-hand
 // @match        https://www.inoreader.com/*
@@ -36,7 +36,7 @@
 
   function isMode(modeStr) {
     const currentMode = view_style_config[window.view_style];
-    console.log({ currentMode });
+    console.trace({ currentMode });
     return currentMode === modeStr;
   }
 
@@ -75,8 +75,11 @@
     const target = e.target.closest(article_magazine_content_wraper);
     if (target) {
       const link = target.querySelector('a')?.href;
-      link && e.preventDefault();
-      link && window.open(link, openMode);
+      if (link) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open(link, openMode);
+      }
     }
   }
 
@@ -87,16 +90,18 @@
     console.log({ flag });
     if (isMode('Card') && flag) {
       return cardModeOpenLink(event);
-    } else if (isMode('Magazine') && flag) {
-      return magazineModeOpenLink(event);
-    }
+    } 
+    // else if (isMode('Magazine') && flag) {
+    //   return; magazineModeOpenLink(event);
+    // }
     return originalDialog.apply(this, arguments);
   };
 
 
   const original_toggle_articleview = window.toggle_articleview;
   window.toggle_articleview = function () {
-    console.log('toggle_articleview');
+    event.stopPropagation();
+    event.preventDefault();
     if (isMode('List')) {
       const [id, no_helpers, event, extra] = arguments;
       const flag = typeof id === 'string' && no_helpers === false && (event instanceof Event || event instanceof MouseEvent) && extra === false;
@@ -105,7 +110,7 @@
         return listViewOpenLink(event);
       }
     } else if (isMode('Magazine')) {
-      return;
+        return magazineModeOpenLink(event);
     }
     const original_scroll_to_article = window.scroll_to_article;
     window.scroll_to_article = () => undefined;
@@ -113,15 +118,6 @@
     setTimeout(() => {
       window.scroll_to_article = original_scroll_to_article
     }, 300);
-  }
-
-  const original_article_click_trap_async = window.article_click_trap_async;
-  window.article_click_trap_async = function () {
-    console.log('article_click_trap_async');
-    if (isMode('Magazine')) {
-      return magazineModeOpenLink(event);
-    }
-    return original_article_click_trap_async.apply(this, arguments);
   }
 
 })();
