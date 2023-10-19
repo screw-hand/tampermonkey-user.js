@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         inoreader-open-link
 // @namespace    https://screw-hand.com/
-// @version      0.8
+// @version      0.9
 // @description  support inoreader web to open the link.
 // @author       screw-hand
 // @match        https://www.inoreader.com/*
@@ -34,10 +34,24 @@
   }
 	/* eslint-enable no-multi-spaces */
 
+  /**
+   * TOOD
+   * 1. mare list mode mark read
+   */
+
   function isMode(modeStr) {
     const currentMode = view_style_config[window.view_style];
     console.trace({ currentMode });
     return currentMode === modeStr;
+  }
+
+  function makeReaded(e) {
+    const article_subscribed = e.target.closest('.article_subscribed');
+    if (article_subscribed) {
+      const a_mark_read = article_subscribed.querySelector('a[onclick^=mark_read]')
+      const span_mark_read = a_mark_read && a_mark_read.querySelector('span[class$=mark_as_read_full]')
+      span_mark_read && a_mark_read.onclick()
+    }
   }
 
   function cardModeOpenLink (e) {
@@ -48,26 +62,23 @@
     if (is_target_article_title_link || is_target_article_title_picture) {
       const article_title_content_wraper = '.article_tile_content_wraper';
       const target_closest_wraper = e.target.closest(article_title_content_wraper);
-      const article_subscribed = e.target.closest('.article_subscribed');
       if (target_closest_wraper) {
         const href = e.target.href || e.target.parentElement.href;
         // TODO make the open in new tab is option that user could setting
         window.open(href, openMode)
       }
-      if (article_subscribed) {
-        const a_mark_read = article_subscribed.querySelector('a[onclick^=mark_read]')
-        a_mark_read && a_mark_read.onclick()
-      }
+      makeReaded(e)
     }
   }
 
-  function listViewOpenLink(e) {
+  function listModeOpenLink(e) {
     const article_header_text = '.article_header_text';
     const target = e.target.closest(article_header_text);
     if (target) {
       const link = target.querySelector('a')?.href;
       link && window.open(link, openMode)
     }
+    // TOOD write list mode mark read in here...
   }
 
   function magazineModeOpenLink(e) {
@@ -77,9 +88,9 @@
       const link = target.querySelector('a')?.href;
       if (link) {
         e.preventDefault();
-        e.stopPropagation();
         window.open(link, openMode);
       }
+      makeReaded(e)
     }
   }
 
@@ -100,6 +111,7 @@
 
   const original_toggle_articleview = window.toggle_articleview;
   window.toggle_articleview = function () {
+    console.trace(event.target);
     event.stopPropagation();
     event.preventDefault();
     if (isMode('List')) {
@@ -107,10 +119,11 @@
       const flag = typeof id === 'string' && no_helpers === false && (event instanceof Event || event instanceof MouseEvent) && extra === false;
       console.log({ flag });
       if (flag) {
-        return listViewOpenLink(event);
+        return listModeOpenLink(event);
       }
-    } else if (isMode('Magazine')) {
-        return magazineModeOpenLink(event);
+    }
+    else if (isMode('Magazine')) {
+      return magazineModeOpenLink(event);
     }
     const original_scroll_to_article = window.scroll_to_article;
     window.scroll_to_article = () => undefined;
