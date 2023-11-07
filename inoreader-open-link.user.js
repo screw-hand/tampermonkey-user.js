@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         inoreader-open-link
 // @namespace    https://screw-hand.com/
-// @version      0.9
+// @version      0.10
 // @description  support inoreader web to open the link.
 // @author       screw-hand
 // @match        https://www.inoreader.com/*
@@ -37,6 +37,7 @@
   /**
    * TOOD
    * 1. mare list mode mark read
+   * 2. Magazine view can't mark unread
    */
 
   function isMode(modeStr) {
