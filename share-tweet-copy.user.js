@@ -17,6 +17,8 @@
 	'use strict';
 
 	/*
+   Change Log
+
 		Version 0.1
 		- Initial release.
 		- Basic functionality to copy tweet text to clipboard with a simple template.
