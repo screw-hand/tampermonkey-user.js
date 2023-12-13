@@ -16,6 +16,15 @@
 (function () {
 	'use strict';
 
+	/**
+	 * TODO
+	 * v0.2
+	 * 1. copy emojoyhttps://twitter.com/sanxiaozhizi/status/1734793603900485822
+	 * 2. let copy button support "copied" notice
+	 * 3. update the code comment
+	 * 4. add change log
+	 */
+
 	const tweetDataExtractors = {
 		username: ({tweetElement}) => tweetElement.querySelector('[dir]').innerText,
 		userid: ({tweetElement}) => findUserID({tweetElement}),
@@ -109,4 +118,4 @@
 
 	// 配置和启动观察者监听器
 	observer.observe(document.body, { childList: true, subtree: true });
-})();
+}
