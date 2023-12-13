@@ -21,8 +21,9 @@
 	 * v0.2
 	 * 1. copy emojoyhttps://twitter.com/sanxiaozhizi/status/1734793603900485822
 	 * 2. let copy button support "copied" notice
-	 * 3. update the code comment
-	 * 4. add change log
+         * 3. Statistics the pic(both git) / videos totoal count
+	 * 4. update the code comment
+	 * 5. add change log
 	 */
 
 	const tweetDataExtractors = {
