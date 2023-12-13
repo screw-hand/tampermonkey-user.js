@@ -263,9 +263,6 @@
 	 * @returns {string} User ID.
 	 */
 	function findUserID({ tweetElement }) {
-
-	// 此函数在推文的DOM元素中查找用户ID
-	function findUserID({ tweetElement }) {
 		// 使用您提供的选择器获取匹配的元素
 		let links = tweetElement.querySelectorAll('a[href^="/"][role="link"][tabindex="-1"]');
 		let userIDElement = links[links.length - 1];
