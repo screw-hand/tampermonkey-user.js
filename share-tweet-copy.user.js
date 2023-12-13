@@ -13,7 +13,7 @@
 // @supportURL   https://github.com/screw-hand/tampermonkey-user.js/issues/new
 // ==/UserScript==
 
-(function () {
+(function () { =
 	'use strict';
 
 	/**
