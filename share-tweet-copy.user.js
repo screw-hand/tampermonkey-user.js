@@ -15,6 +15,31 @@
 
 (function () {
 	'use strict';
+
+	/**
+	 * Change Log
+	 * 
+	 * Version 0.2 (2023-12-13)
+	 *   - Added styles for the copy-tweet button, including support for dark mode.
+	 *   - Implemented a tooltip to show the result of the copy action.
+	 *   - Enhanced dark mode support for better user experience in various lighting conditions.
+	 *
+	 * Version 0.1 (2023-12-13)
+	 *   - Initial release.
+	 *   - Basic functionality to copy tweet text to clipboard with a simple template.
+	 */
+
+	/**
+	 * TODO
+	 * 1. copy emoji https://twitter.com/sanxiaozhizi/status/1734793603900485822
+	 * 2. Statistics the pic(both git) / videos total count
+	 * 3. support user custom input the share template
+	 */
+
+	/**
+	 * Defines the styles for the copy button.
+	 * This includes support for dark mode and styling for various states like hover and focus.
+	 */
 	const copyBtnStyle = `
 	.copy-tweet-button {
 		--button-bg: #e5e6eb;
@@ -139,14 +164,21 @@
 	}
 	`;
 
-	// 通过DOM添加样式
+	/**
+	 * Adds styles using the DOM method.
+	 * @param {string} cssText - The CSS style text to be added.
+	 */
 	function addStyleWithDOM(cssText) {
 		const styleNode = document.createElement('style')
 		styleNode.appendChild(document.createTextNode(cssText));
 		(document.querySelector('head') || document.documentElement).appendChild(styleNode)
 	}
 
-	// 通过GM_addStyle添加样式,并且返回是否成功
+	/**
+	 * Adds styles using GM_addStyle and returns whether it was successful.
+	 * @param {string} cssText - The CSS style text to be added.
+	 * @returns {boolean} Whether the style was successfully added.
+	 */
 	function addStyleWithGM(cssText) {
 		const isGMAddStyleAvailable = typeof GM_addStyle !== 'undefined';
 		if (isGMAddStyleAvailable) {
@@ -155,30 +187,13 @@
 		return isGMAddStyleAvailable;
 	}
 
-
-	// 执行，并且判断是否成功
+	// Execute style addition and check if it was successful
 	const resultsOfEnforcement = addStyleWithGM(copyBtnStyle)
 
-	// 如果不成功，则使用DOM方式
+	// If unsuccessful, fallback to adding styles using the DOM method
 	if (!resultsOfEnforcement) {
 		addStyleWithDOM(copyBtnStyle)
 	}
-
-	/**
-	 * Change Log 
-	 * 
-	 * Version 0.1
-	 *   - Initial release.
-	 *   - Basic functionality to copy tweet text to clipboard with a simple template.
-	 */
-
-	/**
-	 * TODO
-	 * v0.2
-	 * 1. copy emojoyhttps://twitter.com/sanxiaozhizi/status/1734793603900485822
-	 * 2. let copy button support "copied" notice
-	 * 3. add change log
-	 */
 
 	/**
 	 * Contains functions to extract various pieces of data from a tweet element.
