@@ -5,7 +5,7 @@
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
-// @icon         https://abs.twimg.com/favicons/twitter-pip.3.ico
+// @icon         https://abs.twimg.com/favicons/twitter.3.ico
 // @grant        none
 // @homepage     https://github.com/screw-hand/tampermonkey-user.js
 // @updateURL    https://github.com/screw-hand/tampermonkey-user.js/raw/main/share-tweet-copy.user.js
