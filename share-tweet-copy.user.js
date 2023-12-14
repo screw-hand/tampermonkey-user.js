@@ -34,6 +34,10 @@
 	 * 1. copy emoji https://twitter.com/sanxiaozhizi/status/1734793603900485822
 	 * 2. Statistics the pic(both git) / videos total count
 	 * 3. support user custom input the share template
+	 * 
+	 * FIXME
+	 * 1. cannot copy https://twitter.com/Man_Kei/status/1602787456578985984
+	 * 2. notify about copy failed 
 	 */
 
 	/**
