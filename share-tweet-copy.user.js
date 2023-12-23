@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.0
+// @version      0.3.1
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -17,9 +17,16 @@
 	/**
 	 * Change Log
 	 *
+	 * Version 0.3.1 (2023-12-23)
+	 *  - Fixed issue with copying reposted tweets: now correctly retrieves user name.
+	 *  - Optimized the tweeText format, when copy the context with `@username` not line feed.
+	 *  - Fixed copy emoji. Pre-condition: The user's system supports displaying that emoji.
+	 *  - Feature: Statistics the pic total count, for base feature.
+	 *
+	 *
 	 * Version 0.3.0 (2023-12-23)
 	 *   - Public the script to Greasy Fork.
-	 *   - Delete updateURL, donwupdateURL.
+	 *   - Delete updateURL, downloadURL.
 	 *
 	 * Version 0.2 (2023-12-13)
 	 *   - Added styles for the copy-tweet button, including support for dark mode.
@@ -33,13 +40,13 @@
 
 	/**
 	 * TODO
-	 * 1. copy emoji https://twitter.com/sanxiaozhizi/status/1734793603900485822
-	 * 2. Statistics the pic(both git) / videos total count
-	 * 3. support user custom input the share template
+	 * 1. Statistics the pic(both gif) / videos total count
+	 * 2. support user custom input the share template
 	 *
 	 * FIXME
 	 * 1. cannot copy https://twitter.com/Man_Kei/status/1602787456578985984
 	 * 2. notify about copy failed
+	 * 3. remove multiple blank lines
 	 */
 
 	/**
@@ -205,9 +212,10 @@
 	 * Contains functions to extract various pieces of data from a tweet element.
 	 */
 	const tweetDataExtractors = {
-		username: ({ tweetElement }) => tweetElement.querySelector('[dir]').innerText,
+		username: ({ tweetElement }) => tweetElement.querySelector('div[data-testid="User-Name"]').firstChild.innerText,
 		userid: ({ tweetElement }) => findUserID({ tweetElement }),
-		tweetText: ({ tweetElement }) => tweetElement.querySelector('div[data-testid="tweetText"]').innerText,
+		tweetText: ({ tweetElement }) => findTweetText({ tweetElement }),
+		media: ({ tweetElement }) => findMedia({ tweetElement }),
 		link: ({ tweetElement }) => 'https://twitter.com' + tweetElement.querySelector('a[href*="/status/"]').getAttribute('href')
 	};
 
@@ -217,6 +225,8 @@
 	let userTemplate = `{{username}} ({{userid}})
 
 {{tweetText}}
+
+{{media}}
 
 {{link}}`;
 
@@ -233,7 +243,7 @@
 		let copyButton = document.createElement('button');
 		copyButton.className = 'copy-tweet-button'; // 添加一个类名以避免重复添加
 		copyButton.innerHTML = `
-			<span data-text-end="Copied" data-text-initial="Copy to clipboard" class="tooltip"></span>
+			<span data-text-initial="Copy to clipboard" data-text-end="Copied" data-text-failed="Copy failed, open the console for details!" class="tooltip"></span>
 			<span>
 				<svg xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 6.35 6.35" y="0" x="0"
 					height="14" width="14" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
@@ -273,8 +283,18 @@
 	function handleTweetCopyClick({ e, tweetElement }) {
 		e.stopPropagation();
 
-		let formattedText = formatTweet({ tweetElement });
-		copyTextToClipboard(formattedText);
+		try {
+			let formattedText = formatTweet({ tweetElement });
+			copyTextToClipboard(formattedText);
+		} catch (error) {
+			handleCopyError({ tweetElement, error })
+		}
+	}
+
+	function handleCopyError({ tweetElement, error = new Error() }) {
+    const tooltip = tweetElement.querySelector('.copy-tweet-button .tooltip');
+		tooltip.className += 'copy-failed';
+		console.error(error)
 	}
 
 	/**
@@ -284,11 +304,48 @@
 	 * @returns {string} User ID.
 	 */
 	function findUserID({ tweetElement }) {
-		// 使用您提供的选择器获取匹配的元素
 		let links = tweetElement.querySelectorAll('a[href^="/"][role="link"][tabindex="-1"]');
 		let userIDElement = links[links.length - 1];
 
 		return userIDElement ? userIDElement.textContent : '';
+	}
+
+	/**
+	 * Finds the tweetText from a tweet element.
+	 * @param {Object} param - Object containing the tweet element.
+	 * @param {Element} param.tweetElement - The tweet element.
+	 * @returns {string} TweetText
+	 */
+	function findTweetText({ tweetElement }) {
+		const tweetTextDOM = tweetElement.querySelector('div[data-testid="tweetText"]');
+		if (!tweetTextDOM) {
+			return '';
+		}
+		let clone = tweetTextDOM.cloneNode(true);
+		// Support copy the emoji, There are system compatibility issues that cannot be fully resolved.
+		// Consider using a third-party emoji library to solve this problem.
+		clone.querySelectorAll('img').forEach(img => {
+			let altText = img.alt || '';
+			let textNode = document.createTextNode(altText);
+			img.parentNode.replaceChild(textNode, img);
+		});
+		return clone.textContent;
+	}
+
+	/**
+	 * Finds the pic count from a tweet element.
+	 * @param {Object} param - Object containing the tweet element.
+	 * @param {Element} param.tweetElement - The tweet element.
+	 * @returns {string} pic count.
+	 */
+	function findMedia({ tweetElement }) {
+		const picCount = tweetElement.querySelectorAll('a[href*="/photo/"][role="link"]').length;
+
+		// TODO video count (or .gif)
+		// const videoComponent = tweetElement.querySelector('div[data-test-id="videoComponent"')
+
+		let cameraEmoji = '\u{1F4F7}';
+		return `(${cameraEmoji}: ${picCount} Medias)`;
 	}
 
 	/**
@@ -298,13 +355,17 @@
 	 * @returns {string} Formatted tweet data.
 	 */
 	function formatTweet({ tweetElement }) {
-		let formatted = userTemplate.replace(/\\{{/g, '{').replace(/\\}}/g, '}');
-		return formatted.replace(/{{(\w+)}}/g, (match, key) => {
-			if (tweetDataExtractors[key]) {
-				return tweetDataExtractors[key]({ tweetElement });
-			}
-			return match;
-		});
+		// try {
+			let formatted = userTemplate.replace(/\\{{/g, '{').replace(/\\}}/g, '}');
+			return formatted.replace(/{{(\w+)}}/g, (match, key) => {
+				if (tweetDataExtractors[key]) {
+					return tweetDataExtractors[key]({ tweetElement });
+				}
+				return match;
+			});
+		// } catch (error) {
+		//   handleCopyError({ tweetElement, error})
+		// }
 	}
 
 	/**
@@ -314,6 +375,7 @@
 	function copyTextToClipboard(text) {
 		navigator.clipboard.writeText(text).then(function () {
 			console.log('Tweet copied to clipboard');
+			console.log(text);
 		}).catch(function (err) {
 			console.error('Could not copy tweet: ', err);
 		});
