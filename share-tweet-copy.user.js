@@ -1,15 +1,13 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.2
+// @version      0.3.0
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
 // @icon         https://abs.twimg.com/favicons/twitter.3.ico
 // @grant        GM_addStyle
 // @homepage     https://github.com/screw-hand/tampermonkey-user.js
-// @updateURL    https://github.com/screw-hand/tampermonkey-user.js/raw/main/share-tweet-copy.user.js
-// @downloadURL  https://github.com/screw-hand/tampermonkey-user.js/raw/main/share-tweet-copy.user.js
 // @supportURL   https://github.com/screw-hand/tampermonkey-user.js/issues/new
 // ==/UserScript==
 
@@ -18,7 +16,11 @@
 
 	/**
 	 * Change Log
-	 * 
+	 *
+	 * Version 0.3.0 (2023-12-23)
+	 *   - Public the script to Greasy Fork.
+	 *   - Delete updateURL, donwupdateURL.
+	 *
 	 * Version 0.2 (2023-12-13)
 	 *   - Added styles for the copy-tweet button, including support for dark mode.
 	 *   - Implemented a tooltip to show the result of the copy action.
@@ -34,10 +36,10 @@
 	 * 1. copy emoji https://twitter.com/sanxiaozhizi/status/1734793603900485822
 	 * 2. Statistics the pic(both git) / videos total count
 	 * 3. support user custom input the share template
-	 * 
+	 *
 	 * FIXME
 	 * 1. cannot copy https://twitter.com/Man_Kei/status/1602787456578985984
-	 * 2. notify about copy failed 
+	 * 2. notify about copy failed
 	 */
 
 	/**
