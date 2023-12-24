@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.2
+// @version      0.3.3
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -16,6 +16,10 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.3 (2023-12-25)
+   *  - Chore indent use 2 spaces.
+   *  - Feat remove multiple blank lines.
    *
    * Version 0.3.2 (2023-12-24)
    *  - Chore indent use 2 spaces.
@@ -49,7 +53,6 @@
    * FIXME
    * 1. cannot copy https://twitter.com/Man_Kei/status/1602787456578985984
    * 2. notify about copy failed
-   * 3. remove multiple blank lines
    */
 
   /**
@@ -218,7 +221,7 @@
     username: ({ tweetElement }) => tweetElement.querySelector('div[data-testid="User-Name"]').firstChild.innerText,
     userid: ({ tweetElement }) => findUserID({ tweetElement }),
     tweetText: ({ tweetElement }) => findTweetText({ tweetElement }),
-    meida: ({ tweetElement }) => findMedia({ tweetElement }),
+    mediaCount: ({ tweetElement }) => findMediaCount({ tweetElement }),
     link: ({ tweetElement }) => 'https://twitter.com' + tweetElement.querySelector('a[href*="/status/"]').getAttribute('href')
   };
 
@@ -229,7 +232,7 @@
 
 {{tweetText}}
 
-{{meida}}
+{{mediaCount}}
 
 {{link}}`;
 
@@ -341,14 +344,21 @@
    * @param {Element} param.tweetElement - The tweet element.
    * @returns {string} pic count.
    */
-  function findMedia({ tweetElement }) {
+  function findMediaCount({ tweetElement }) {
+    let cameraEmoji = '\u{1F4F7}';
     const picCount = tweetElement.querySelectorAll('a[href*="/photo/"][role="link"]').length;
 
     // TODO video count (or .gif)
     // const videoComponent = tweetElement.querySelector('div[data-test-id="videoComponent"')
 
-    let cameraEmoji = '\u{1F4F7}';
-    return `(${cameraEmoji}: ${picCount} Medias)`;
+    // FIXME: bad design, this a build-in template, but need to number of judgments.
+    // ===
+    const mediaCount = (picCount) || 0;
+    if (!mediaCount) {
+      return '';
+    }
+    return `(${cameraEmoji}: ${mediaCount} Medias)`;
+    // ===
   }
 
   /**
@@ -360,12 +370,14 @@
   function formatTweet({ tweetElement }) {
     // try {
     let formatted = userTemplate.replace(/\\{{/g, '{').replace(/\\}}/g, '}');
-    formatted.replace(/{{(\w+)}}/g, (match, key) => {
+    formatted = formatted.replace(/{{(\w+)}}/g, (match, key) => {
       if (tweetDataExtractors[key]) {
         return tweetDataExtractors[key]({ tweetElement });
       }
       return match;
     });
+    formatted = formatted.replaceAll(/\n\n\n/gi, '\n')
+    return formatted;
     // } catch (error) {
     // handleCopyError({ tweetElement, error})
     // }
