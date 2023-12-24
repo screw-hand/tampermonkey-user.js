@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.3
+// @version      0.3.4
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -16,6 +16,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.4 (2023-12-25)
+   *  - Update media count default template.
    *
    * Version 0.3.3 (2023-12-25)
    *  - Chore indent use 2 spaces.
@@ -354,10 +357,14 @@
     // FIXME: bad design, this a build-in template, but need to number of judgments.
     // ===
     const mediaCount = (picCount) || 0;
+    let mediaWord = 'media'
     if (!mediaCount) {
       return '';
     }
-    return `(${cameraEmoji}: ${mediaCount} Medias)`;
+    if (mediaCount > 1) {
+      mediaWord += 's'
+    }
+    return `${cameraEmoji} ${mediaCount} ${mediaWord}`;
     // ===
   }
 
