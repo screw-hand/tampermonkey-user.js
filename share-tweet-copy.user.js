@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.1
+// @version      0.3.2
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
