@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.4
+// @version      0.3.5
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -16,6 +16,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.5 (2023-12-25)
+   *  - Rename script path of github repo.
    *
    * Version 0.3.4 (2023-12-25)
    *  - Update media count default template.
