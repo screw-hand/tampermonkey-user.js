@@ -9,6 +9,8 @@
 // @grant        GM_addStyle
 // @homepage     https://github.com/screw-hand/tampermonkey-user.js
 // @supportURL   https://github.com/screw-hand/tampermonkey-user.js/issues/new
+// @downloadURL https://update.greasyfork.org/scripts/482936/share-tweet-copy.user.js
+// @updateURL https://update.greasyfork.org/scripts/482936/share-tweet-copy.meta.js
 // ==/UserScript==
 
 (function () {
@@ -16,6 +18,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.9 (2023-12-29)
+   *  - fix copy result is undefined
    *
    * Version 0.3.8 (2023-12-29)
    *  - notify about copy failed
@@ -313,8 +318,8 @@
     e.stopPropagation();
 
     try {
-      let formattedText = formatTweet({ tweetElement });
-      copyTextToClipboard({ tweetElement, formattedText });
+      let text = formatTweet({ tweetElement });
+      copyTextToClipboard({ tweetElement, text });
     } catch (error) {
       handleCopyError({ tweetElement, error })
     }
