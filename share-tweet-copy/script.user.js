@@ -7,6 +7,8 @@
 // @match        https://twitter.com/*
 // @icon         https://abs.twimg.com/favicons/twitter.3.ico
 // @grant        GM_addStyle
+// @homepage     https://github.com/screw-hand/tampermonkey-user.js
+// @supportURL   https://github.com/screw-hand/tampermonkey-user.js/issues/new
 // ==/UserScript==
 
 (function () {
