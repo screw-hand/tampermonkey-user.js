@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.9
+// @version      0.3.10
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -18,6 +18,10 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.10 (2023-12-29)
+   *  - temp update status page style
+   *  - update failedmark icon svg
    *
    * Version 0.3.9 (2023-12-29)
    *  - fix copy result is undefined
@@ -269,7 +273,10 @@
     }
 
     let copyButton = document.createElement('button');
-    copyButton.className = 'copy-tweet-button'; // 添加一个类名以避免重复添加
+    copyButton.className = 'copy-tweet-button';
+
+    handleTempStyleStatusPage({ copyButton, tweetElement });
+
     copyButton.innerHTML = /*html*/`
       <span data-text-initial="Copy to clipboard" data-text-end="Copied" data-text-failed="Copy failed, open the console for details!" class="tooltip"></span>
       <span>
@@ -291,11 +298,9 @@
             </path>
           </g>
         </svg>
-        <svg xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0" height="14"
-          width="14" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg"
-          class="failedmark">
-          <path d="M7 17L16.8995 7.10051" stroke="#b33636" stroke-linecap="round" stroke-linejoin="round"></path>
-          <path d="M7 7.00001L16.8995 16.8995" stroke="#b33636" stroke-linecap="round" stroke-linejoin="round"></path>
+        <svg class="failedmark" xmlns="http://www.w3.org/2000/svg" height="14" width="14" viewBox="0 0 512 512">
+          <path fill="#FF473E"
+            d="m330.443 256l136.765-136.765c14.058-14.058 14.058-36.85 0-50.908l-23.535-23.535c-14.058-14.058-36.85-14.058-50.908 0L256 181.557L119.235 44.792c-14.058-14.058-36.85-14.058-50.908 0L44.792 68.327c-14.058 14.058-14.058 36.85 0 50.908L181.557 256L44.792 392.765c-14.058 14.058-14.058 36.85 0 50.908l23.535 23.535c14.058 14.058 36.85 14.058 50.908 0L256 330.443l136.765 136.765c14.058 14.058 36.85 14.058 50.908 0l23.535-23.535c14.058-14.058 14.058-36.85 0-50.908z" />
         </svg>
       </span>
     `
@@ -430,6 +435,26 @@
       handleCopyError({ tweetElement, error })
     });
   }
+
+  // FIXME Temporary solution to solve the problem of /status/ web style misalignment
+  const handleTempStyleStatusPage = (() => {
+    let executed = false;
+
+    return ({ copyButton, tweetElement }) => {
+      if (window.location.href.indexOf('/status/') > 0 && !executed) {
+        executed = true;
+
+        const username = tweetElement.querySelector('div[data-testid="User-Name"] span');
+        const left = username.clientWidth;
+        const tempStyle = /*css*/`
+          position: absolute;
+          top: 0;
+          left: ${left}px;
+        `;
+        copyButton.setAttribute('style', tempStyle);
+      }
+    };
+  })();
 
   /**
    * Observes DOM mutations to add a copy button to new tweets.
