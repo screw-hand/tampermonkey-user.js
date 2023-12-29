@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         inoreader-open-link
 // @namespace    https://screw-hand.com/
-// @version      0.10
+// @version      0.11
 // @description  support inoreader web to open the link.
 // @author       screw-hand
 // @match        https://www.inoreader.com/*
@@ -9,8 +9,6 @@
 // @grant        none
 // @homepage     https://github.com/screw-hand/tampermonkey-user.js
 // @updateURL    https://github.com/screw-hand/tampermonkey-user.js/raw/main/inoreader-open-link.user.js
-// @downloadURL  https://github.com/screw-hand/tampermonkey-user.js/raw/main/inoreader-open-link.user.js
-// @supportURL   https://github.com/screw-hand/tampermonkey-user.js/issues/new
 // ==/UserScript==
 
 (function () {
@@ -102,7 +100,7 @@
     console.log({ flag });
     if (isMode('Card') && flag) {
       return cardModeOpenLink(event);
-    } 
+    }
     // else if (isMode('Magazine') && flag) {
     //   return; magazineModeOpenLink(event);
     // }
