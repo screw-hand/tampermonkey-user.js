@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.7
+// @version      0.3.8
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -16,6 +16,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.8 (2023-12-29)
+   *  - notify about copy failed
    *
    * Version 0.3.7 (2023-12-29)
    *  - recover homepage and supportURL config.
@@ -58,18 +61,10 @@
    */
 
   /**
-   * TODO
-   * 1. support user custom input the share template
-   *
-   * FIXME
-   * 1. notify about copy failed
-   */
-
-  /**
    * Defines the styles for the copy button.
    * This includes support for dark mode and styling for various states like hover and focus.
    */
-  const copyBtnStyle = `
+  const copyBtnStyle = /*css*/`
   .copy-tweet-button {
     --button-bg: #e5e6eb;
     --button-hover-bg: #d7dbe2;
@@ -157,7 +152,8 @@
     transform: translate(-50%, -50%);
   }
 
-  .checkmark {
+  .checkmark,
+  .failedmark {
     display: none;
   }
 
@@ -170,12 +166,23 @@
   .copy-tweet-button:focus:not(:focus-visible) .tooltip::before {
     content: attr(data-text-end);
   }
+  .copy-tweet-button.copy-failed:focus:not(:focus-visible) .tooltip::before {
+    content: attr(data-text-failed);
+  }
 
   .copy-tweet-button:focus:not(:focus-visible) .clipboard {
     display: none;
   }
 
   .copy-tweet-button:focus:not(:focus-visible) .checkmark {
+    display: block;
+  }
+
+  .copy-tweet-button.copy-failed:focus:not(:focus-visible) .checkmark {
+    display: none;
+  }
+
+  .copy-tweet-button.copy-failed:focus:not(:focus-visible) .failedmark {
     display: block;
   }
 
@@ -258,8 +265,8 @@
 
     let copyButton = document.createElement('button');
     copyButton.className = 'copy-tweet-button'; // 添加一个类名以避免重复添加
-    copyButton.innerHTML = `
-      <span data-text-initial="Copy to clipboard" data-text-end="Copied" data-text-faild="Copy failed, open the console for details!" class="tooltip"></span>
+    copyButton.innerHTML = /*html*/`
+      <span data-text-initial="Copy to clipboard" data-text-end="Copied" data-text-failed="Copy failed, open the console for details!" class="tooltip"></span>
       <span>
         <svg xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 6.35 6.35" y="0" x="0"
           height="14" width="14" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
@@ -278,6 +285,12 @@
               d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
             </path>
           </g>
+        </svg>
+        <svg xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0" height="14"
+          width="14" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg"
+          class="failedmark">
+          <path d="M7 17L16.8995 7.10051" stroke="#b33636" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M7 7.00001L16.8995 16.8995" stroke="#b33636" stroke-linecap="round" stroke-linejoin="round"></path>
         </svg>
       </span>
     `
@@ -301,18 +314,16 @@
 
     try {
       let formattedText = formatTweet({ tweetElement });
-      copyTextToClipboard(formattedText);
+      copyTextToClipboard({ tweetElement, formattedText });
     } catch (error) {
       handleCopyError({ tweetElement, error })
     }
   }
 
   function handleCopyError({ tweetElement, error = new Error() }) {
-    const tooltip = tweetElement.querySelector('.copy-tweet-button .tooltip');
-    if (tooltip.className.indexOf('copy-faild') < 0) {
-      tooltip.className += ' copy-failed';
-    }
-    console.error(error)
+    const copyTweetButton = tweetElement.querySelector('.copy-tweet-button');
+    copyTweetButton.classList.add('copy-failed')
+    console.error('Could not copy tweet: ', error);
   }
 
   /**
@@ -388,7 +399,6 @@
    * @returns {string} Formatted tweet data.
    */
   function formatTweet({ tweetElement }) {
-    // try {
     let formatted = userTemplate.replace(/\\{{/g, '{').replace(/\\}}/g, '}');
     formatted = formatted.replace(/{{(\w+)}}/g, (match, key) => {
       if (tweetDataExtractors[key]) {
@@ -398,21 +408,21 @@
     });
     formatted = formatted.replaceAll(/\n\n\n/gi, '\n')
     return formatted;
-    // } catch (error) {
-    // handleCopyError({ tweetElement, error})
-    // }
   }
 
   /**
    * Copies text to the clipboard.
-   * @param {string} text - Text to be copied.
+   * @param {Object} param - Object containing the tweet element.
+   * @param {Element} param.tweetElement - The tweet element.
+   * @param {string} param.text - Text to be copied.
    */
-  function copyTextToClipboard(text) {
+  function copyTextToClipboard({ tweetElement, text }) {
     navigator.clipboard.writeText(text).then(function () {
       console.log('Tweet copied to clipboard');
       console.log(text);
-    }).catch(function (err) {
-      console.error('Could not copy tweet: ', err);
+      console.log('===');
+    }).catch(function (error) {
+      handleCopyError({ tweetElement, error })
     });
   }
 
