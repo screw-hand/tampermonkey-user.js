@@ -16,7 +16,7 @@
    * Change Log
    *
    * Version 0.3.6 (2023-12-29)
-   *  - Media count suppport static git, video, and more media card.
+   *  - Media count support static git, video, and more media card.
    *
    * Version 0.3.5 (2023-12-25)
    *  - Rename script path of github repo.
