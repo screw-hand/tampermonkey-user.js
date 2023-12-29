@@ -1,14 +1,12 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.5
+// @version      0.3.6
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
 // @icon         https://abs.twimg.com/favicons/twitter.3.ico
 // @grant        GM_addStyle
-// @homepage     https://github.com/screw-hand/tampermonkey-user.js
-// @supportURL   https://github.com/screw-hand/tampermonkey-user.js/issues/new
 // ==/UserScript==
 
 (function () {
@@ -16,6 +14,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.6 (2023-12-29)
+   *  - Media count suppport static git, video, and more media card.
    *
    * Version 0.3.5 (2023-12-25)
    *  - Rename script path of github repo.
@@ -53,12 +54,10 @@
 
   /**
    * TODO
-   * 1. Statistics the pic(both gif) / videos total count
-   * 2. support user custom input the share template
+   * 1. support user custom input the share template
    *
    * FIXME
-   * 1. cannot copy https://twitter.com/Man_Kei/status/1602787456578985984
-   * 2. notify about copy failed
+   * 1. notify about copy failed
    */
 
   /**
@@ -305,7 +304,9 @@
 
   function handleCopyError({ tweetElement, error = new Error() }) {
     const tooltip = tweetElement.querySelector('.copy-tweet-button .tooltip');
-    tooltip.className += 'copy-faild';
+    if (tooltip.className.indexOf('copy-faild') < 0) {
+      tooltip.className += ' copy-failed';
+    }
     console.error(error)
   }
 
@@ -345,21 +346,25 @@
   }
 
   /**
-   * Finds the pic count from a tweet element.
+   * Finds the media count from a tweet element.
    * @param {Object} param - Object containing the tweet element.
    * @param {Element} param.tweetElement - The tweet element.
-   * @returns {string} pic count.
+   * @returns {string} media count.
    */
   function findMediaCount({ tweetElement }) {
     let cameraEmoji = '\u{1F4F7}';
-    const picCount = tweetElement.querySelectorAll('a[href*="/photo/"][role="link"]').length;
 
-    // TODO video count (or .gif)
-    // const videoComponent = tweetElement.querySelector('div[data-test-id="videoComponent"')
+    const picCount = tweetElement.querySelectorAll('a[href*="/photo/"][role="link"]')?.length;
+
+    const gifCount = tweetElement.querySelectorAll('div[data-testid="tweetPhoto"]')?.length;
+
+    const videoComponent = tweetElement.querySelectorAll('div[data-test-id="videoComponent"')?.length;
+
+    const mediaCard = tweetElement.querySelectorAll('div[data-testid^="card.wrapper"]')?.length;
 
     // FIXME: bad design, this a build-in template, but need to number of judgments.
     // ===
-    const mediaCount = (picCount) || 0;
+    const mediaCount = (picCount + gifCount + videoComponent + mediaCard) || 0;
     let mediaWord = 'media'
     if (!mediaCount) {
       return '';
