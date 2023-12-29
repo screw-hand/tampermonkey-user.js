@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.6
+// @version      0.3.7
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -16,6 +16,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.7 (2023-12-29)
+   *  - recover homepage and supportURL config.
    *
    * Version 0.3.6 (2023-12-29)
    *  - Media count support static git, video, and more media card.
