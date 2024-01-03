@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.10
+// @version      0.3.11
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -18,6 +18,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.11 (2023-12-29)
+   *  - Fix media static error result count.
    *
    * Version 0.3.10 (2023-12-29)
    *  - temp update status page style
@@ -380,17 +383,9 @@
   function findMediaCount({ tweetElement }) {
     let cameraEmoji = '\u{1F4F7}';
 
-    const picCount = tweetElement.querySelectorAll('a[href*="/photo/"][role="link"]')?.length;
-
-    const gifCount = tweetElement.querySelectorAll('div[data-testid="tweetPhoto"]')?.length;
-
-    const videoComponent = tweetElement.querySelectorAll('div[data-test-id="videoComponent"')?.length;
-
-    const mediaCard = tweetElement.querySelectorAll('div[data-testid^="card.wrapper"]')?.length;
-
     // FIXME: bad design, this a build-in template, but need to number of judgments.
     // ===
-    const mediaCount = (picCount + gifCount + videoComponent + mediaCard) || 0;
+    const mediaCount = tweetElement.querySelectorAll('div[data-testid="tweetPhoto"]')?.length || 0;
     let mediaWord = 'media'
     if (!mediaCount) {
       return '';
