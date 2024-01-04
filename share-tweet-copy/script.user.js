@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.11
+// @version      0.3.12
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -18,6 +18,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.12 (2023-12-29)
+   *  - Fix media static error result count, add card link count.
    *
    * Version 0.3.11 (2023-12-29)
    *  - Fix media static error result count.
@@ -385,7 +388,9 @@
 
     // FIXME: bad design, this a build-in template, but need to number of judgments.
     // ===
-    const mediaCount = tweetElement.querySelectorAll('div[data-testid="tweetPhoto"]')?.length || 0;
+    const tweetPhoto = tweetElement.querySelectorAll('div[data-testid="tweetPhoto"]')?.length || 0;
+    const cardLink = tweetElement.querySelectorAll('div[data-testid^="card"] a[href*="https://t.co"]')?.length || 0;
+    const mediaCount = tweetPhoto + cardLink;
     let mediaWord = 'media'
     if (!mediaCount) {
       return '';
