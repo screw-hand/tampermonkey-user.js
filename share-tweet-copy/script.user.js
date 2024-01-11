@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.12
+// @version      0.3.13
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -18,6 +18,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.13 (2023-01-11)
+   *  - Fix add newline between original and translated text in Immersive Translate.
    *
    * Version 0.3.12 (2023-12-29)
    *  - Fix media static error result count, add card link count.
@@ -367,6 +370,7 @@
       return '';
     }
     let clone = tweetTextDOM.cloneNode(true);
+    clone.innerHTML = tweetTextDOM.innerHTML.replace('><br><font', '>\n\n<font');
     // Support copy the emoji, There are system compatibility issues that cannot be fully resolved.
     // Consider using a third-party emoji library to solve this problem.
     clone.querySelectorAll('img').forEach(img => {
