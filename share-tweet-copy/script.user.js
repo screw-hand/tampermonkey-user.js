@@ -442,19 +442,18 @@
 
   // FIXME Temporary solution to solve the problem of /status/ web style misalignment
   const handleTempStyleStatusPage = (() => {
-    let executed = false;
-
     return ({ copyButton, tweetElement }) => {
+      let executed = false;
+
       if (window.location.href.indexOf('/status/') > 0 && !executed) {
         executed = true;
 
-        const username = tweetElement.querySelector('div[data-testid="User-Name"] span');
-        const left = username.clientWidth;
         const tempStyle = /*css*/`
           position: absolute;
-          top: 0;
-          left: ${left}px;
+          top: -2px;
+          right: calc(-1 * (var(--button-diameter) + 8px));
         `;
+        
         copyButton.setAttribute('style', tempStyle);
       }
     };
