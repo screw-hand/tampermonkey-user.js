@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.14
+// @version      0.3.15
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -18,6 +18,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.14 (2024-01-24)
+   * - Fix margin for copy-tweet-button
    *
    * Version 0.3.14 (2024-01-24)
    *  - Fix button style on status page.
@@ -131,7 +134,7 @@
     outline: var(--button-outline-width) solid transparent;
     transition: all 0.2s ease;
   }
-  
+
   *:has(+ .copy-tweet-button) {
     margin-right: 8px !important;
   }
