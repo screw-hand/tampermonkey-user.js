@@ -441,24 +441,21 @@
   }
 
   // FIXME Temporary solution to solve the problem of /status/ web style misalignment
-  const handleTempStyleStatusPage = (() => {
+  const handleTempStyleStatusPage = ({ copyButton }) => {
     let executed = false;
+    
+    if (window.location.href.indexOf('/status/') > 0 && !executed) {
+      executed = true;
 
-    return ({ copyButton, tweetElement }) => {
-      if (window.location.href.indexOf('/status/') > 0 && !executed) {
-        executed = true;
+      const tempStyle = /*css*/`
+        position: absolute;
+        top: -2px;
+        right: calc(-1 * (var(--button-diameter) + 8px));
+      `;
 
-        const username = tweetElement.querySelector('div[data-testid="User-Name"] span');
-        const left = username.clientWidth;
-        const tempStyle = /*css*/`
-          position: absolute;
-          top: 0;
-          left: ${left}px;
-        `;
-        copyButton.setAttribute('style', tempStyle);
-      }
-    };
-  })();
+      copyButton.setAttribute('style', tempStyle);
+    }
+  }
 
   /**
    * Observes DOM mutations to add a copy button to new tweets.
