@@ -19,7 +19,7 @@
   /**
    * Change Log
    *
-   * Version 0.3.14 (2024-01-24)
+   * Version 0.3.15 (2024-01-24)
    * - Fix margin for copy-tweet-button
    *
    * Version 0.3.14 (2024-01-24)
