@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.13
+// @version      0.3.14
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -18,6 +18,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.14 (2024-01-24)
+   *  - Fix button style on status page.
    *
    * Version 0.3.13 (2023-01-11)
    *  - Fix add newline between original and translated text in Immersive Translate.
@@ -284,7 +287,7 @@
     let copyButton = document.createElement('button');
     copyButton.className = 'copy-tweet-button';
 
-    handleTempStyleStatusPage({ copyButton, tweetElement });
+    handleTempStyleStatusPage({ copyButton });
 
     copyButton.innerHTML = /*html*/`
       <span data-text-initial="Copy to clipboard" data-text-end="Copied" data-text-failed="Copy failed, open the console for details!" class="tooltip"></span>
@@ -443,7 +446,7 @@
   // FIXME Temporary solution to solve the problem of /status/ web style misalignment
   const handleTempStyleStatusPage = ({ copyButton }) => {
     let executed = false;
-    
+
     if (window.location.href.indexOf('/status/') > 0 && !executed) {
       executed = true;
 
