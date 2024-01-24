@@ -122,7 +122,6 @@
     box-sizing: border-box;
     width: var(--button-diameter);
     height: var(--button-diameter);
-    margin-left: 8px;
     border-radius: var(--button-border-radius);
     background-color: var(--button-bg);
     color: var(--button-text-color);
@@ -131,6 +130,10 @@
     position: relative;
     outline: var(--button-outline-width) solid transparent;
     transition: all 0.2s ease;
+  }
+  
+  *:has(+ .copy-tweet-button) {
+    margin-right: 8px !important;
   }
 
   .tooltip {
