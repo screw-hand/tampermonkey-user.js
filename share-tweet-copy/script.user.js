@@ -262,7 +262,7 @@
    * Contains functions to extract various pieces of data from a tweet element.
    */
   const tweetDataExtractors = {
-    username: ({ tweetElement }) => tweetElement.querySelector('div[data-testid="User-Name"]').firstChild.innerText,
+    username: ({ tweetElement }) => findUserName({ tweetElement }), 
     userid: ({ tweetElement }) => findUserID({ tweetElement }),
     tweetText: ({ tweetElement }) => findTweetText({ tweetElement }),
     mediaCount: ({ tweetElement }) => findMediaCount({ tweetElement }),
@@ -352,6 +352,26 @@
     const copyTweetButton = tweetElement.querySelector('.copy-tweet-button');
     copyTweetButton.classList.add('copy-failed')
     console.error('Could not copy tweet: ', error);
+  }
+
+  /**
+   * Finds the user name from a tweet element.
+   * @param {Object} param - Object containing the tweet element.
+   * @param {Element} param.tweetElement - The tweet element.
+   * @returns {string} User Name.
+   */
+  function findUserName({ tweetElement }) {
+    let username = tweetElement.querySelector('div[data-testid="User-Name"]').firstChild;
+    if (!username) {
+      return '';
+    }
+    let clone = username.cloneNode(true);
+    clone.querySelectorAll('img').forEach(img => {
+      let altText = img.alt || '';
+      let textNode = document.createTextNode(altText);
+      img.parentNode.replaceChild(textNode, img);
+    });
+    return clone.textContent;
   }
 
   /**
