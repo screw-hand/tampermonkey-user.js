@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.15
+// @version      0.3.16
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -18,6 +18,9 @@
 
   /**
    * Change Log
+   *
+   * Version 0.3.16 (2024-04-17)
+   * - Fix username's emoji cannot be copied
    *
    * Version 0.3.15 (2024-01-24)
    * - Fix margin for copy-tweet-button
