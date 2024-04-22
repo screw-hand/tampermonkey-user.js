@@ -1,0 +1,13 @@
+{
+  "name": "tampermonkey-user.js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "share-tweet-copy:test": "node ./share-tweet-copy/test/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
