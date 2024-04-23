@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.3.16
+// @version      0.4.0
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
 // @icon         https://abs.twimg.com/favicons/twitter.3.ico
 // @grant        GM_addStyle
+// @grant        GM_getValue
 // @homepage     https://github.com/screw-hand/tampermonkey-user.js
 // @supportURL   https://github.com/screw-hand/tampermonkey-user.js/issues/new
 // @downloadURL https://update.greasyfork.org/scripts/482936/share-tweet-copy.user.js
@@ -18,12 +19,17 @@
 
   /**
    * Change Log
+   * 
+   * Version 0.4.0 (2024-04-23)
+   *  - Tweets are measured by character count, and if the character count exceeds the limit, it is replaced with an ellipsis;
+   *  - If the number of line breaks in a tweet exceeds the limit, it is replaced with an ellipsis.
+   *  - support environment variable
    *
    * Version 0.3.16 (2024-04-17)
-   * - Fix username's emoji cannot be copied
+   *  - Fix username's emoji cannot be copied
    *
    * Version 0.3.15 (2024-01-24)
-   * - Fix margin for copy-tweet-button
+   *  - Fix margin for copy-tweet-button
    *
    * Version 0.3.14 (2024-01-24)
    *  - Fix button style on status page.
@@ -262,6 +268,19 @@
   }
 
   /**
+   * environment variable
+   * @type {Object}
+   * @property {string} MODE 'DEV' || 'PROD'
+   */
+  const ENV = {
+    MODE: GM_getValue('ENV_MODE', 'PROD')
+  }
+
+  if (ENV.MODE !== 'PROD') {
+    console.log(`share-tweet-copy: ${ENV.MODE}`)
+  }
+
+  /**
    * Contains functions to extract various pieces of data from a tweet element.
    */
   const tweetDataExtractors = {
@@ -351,6 +370,11 @@
     }
   }
 
+  /**
+   * handles copy error
+   * @param {Element} param.tweetElement - The tweet element.
+   * @param {Error} param.error - The error object.
+   */
   function handleCopyError({ tweetElement, error = new Error() }) {
     const copyTweetButton = tweetElement.querySelector('.copy-tweet-button');
     copyTweetButton.classList.add('copy-failed')
@@ -391,6 +415,106 @@
   }
 
   /**
+   * @param {string} tweetText
+   * @param {number} count max line breaks
+   * @returns {string} tweetText
+   */
+  function limitLineBreaks(tweetText, count) {
+    const lineCount = (tweetText.match(/\n/g) || []).length;
+    if (lineCount > count) {
+      const limitedText = tweetText.split('\n').slice(0, count).join('\n');
+      return limitedText + '...\n';
+    }
+    return tweetText
+  }
+
+  /**
+   * Calculate the length of the tweet character, and use an ellipsis to represent the overflow content.
+   * @param {string} tweetText 
+   * @returns {string} tweetText
+   */
+  function handleTweetText(tweetText) {
+    /**
+     * Counting characters Rule reference the following link, this is just a simple implementation
+     * Counting characters | Docs | Twitter Developer Platform
+     * https://developer.twitter.com/en/docs/counting-characters
+     */
+    const MAX_TWEET_CHARACTERS = 280;
+    const CharacterConfig = {
+      urls: { pattern: /https?:\/\/[^\s]+/g, charActerLength: 23 },
+      emojis: { pattern: /[\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, charActerLength: 2 },
+      cjk: { pattern: /[\u{4E00}-\u{9FFF}\u{3400}-\u{4DBF}\u{20000}-\u{2A6DF}\u{2A700}-\u{2B73F}\u{2B740}-\u{2B81F}\u{2B820}-\u{2CEAF}\u{F900}-\u{FAFF}\u{2F800}-\u{2FA1F}\u{AC00}-\u{D7AF}\u{1100}-\u{11FF}]/gu, charActerLength: 2 },
+      mentions: { pattern: /@\w+/g, charActerLength: 0 }
+    };
+    const MAX_LINE_BREAK = 10;
+
+    let characterCounts = {}
+    Object.keys(CharacterConfig).forEach(key => {
+      characterCounts[key] = 0
+    })
+
+    // Normalize the text
+    tweetText = tweetText.normalize('NFC');
+
+    let characterLength = 0;
+    let tweetIndex = 0;
+    let mask = {};
+
+    while (tweetIndex < tweetText.length) {
+      let matched = false;
+
+      // Check each character pattern
+      for (const [key, config] of Object.entries(CharacterConfig)) {
+        const regex = new RegExp(config.pattern);
+        regex.lastIndex = tweetIndex; // Start matching from current index
+        const match = regex.exec(tweetText);
+
+        if (match && match.index === tweetIndex) { // Match must start at the current index
+          characterCounts[key] += 1;
+          matched = true;
+          const matchLength = match[0].length;
+
+          if (key === 'urls') {
+            // For URLs, add the entire URL's length once
+            characterLength += config.charActerLength;
+            tweetIndex += matchLength - 1; // Move index to the end of the URL
+          } else {
+            // For other patterns, add length per matched character
+            characterLength += matchLength * config.charActerLength;
+          }
+
+          break; // Stop checking other patterns once matched
+        }
+      }
+
+      if (!matched) {
+        // If no special characters matched, count the current character as one
+        characterLength += 1;
+      }
+
+      tweetIndex++; // Move to the next character
+    }
+
+    if (ENV.MODE !== 'PROD') {
+      console.log({
+        characterLength,
+        tweetText_length: tweetText.length,
+        characterCounts
+      });
+    }
+
+    // Check if the length exceeds the limit and trim if necessary
+    if (characterLength > MAX_TWEET_CHARACTERS) {
+      tweetText = tweetText.substring(0, MAX_TWEET_CHARACTERS) + '...'; // Truncate and add ellipsis
+    } 
+    else {
+      tweetText = limitLineBreaks(tweetText, MAX_LINE_BREAK)
+    }
+
+    return tweetText;
+  }
+
+  /**
    * Finds the tweetText from a tweet element.
    * @param {Object} param - Object containing the tweet element.
    * @param {Element} param.tweetElement - The tweet element.
@@ -410,7 +534,9 @@
       let textNode = document.createTextNode(altText);
       img.parentNode.replaceChild(textNode, img);
     });
-    return clone.textContent;
+    let tweetText  = handleTweetText(clone.textContent);
+    
+    return tweetText;
   }
 
   /**
