@@ -12,12 +12,28 @@
 // ==/UserScript==
 
 (function() {
-    'use strict';
-    /**
-     *  Include external JS scripts here for easy switching.
-     */
-    // @require      https://update.greasyfork.org/scripts/482936/share-tweet-copy.user.js
-    // @require      file:///Users/wu/Documents/code/tampermonkey-user.js/share-tweet-copy/script.user.js
+  'use strict';
+  /**
+   *  Include external JS scripts here for easy switching.
+   */
+  // @require      https://update.greasyfork.org/scripts/482936/share-tweet-copy.user.js
+  // @require      file:///Users/wu/Documents/code/tampermonkey-user.js/share-tweet-copy/script.user.js
 
-    GM_setValue("ENV_MODE", "DEV");
+  /* === */
+  const USER_TEMPLATE = [
+    `{{username}} ({{userId}})`,
+    ``,
+    `{{tweetText}}`,
+    ``,
+    `{{mediaCount}}`,
+    ``,
+    `{{link}}`,
+    ``,
+    `=========`,
+    `power by https://greasyfork.org/scripts/482936`
+  ].join('\n');
+
+  GM_setValue("ENV_MODE", "DEV");
+
+  GM_setValue("ENV_USER_TEMPLATE", USER_TEMPLATE);
 })();
