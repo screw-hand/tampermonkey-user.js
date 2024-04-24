@@ -20,6 +20,9 @@
   /**
    * Change Log
    * 
+   * Version 0.4.1(2024-04-24)
+   *  - dev.user.js (dev mode) support set up USER_TEMPLATE environment variable.
+   * 
    * Version 0.4.0 (2024-04-23)
    *  - Tweets are measured by character count, and if the character count exceeds the limit, it is replaced with an ellipsis;
    *  - If the number of line breaks in a tweet exceeds the limit, it is replaced with an ellipsis.
@@ -271,9 +274,11 @@
    * environment variable
    * @type {Object}
    * @property {string} MODE 'DEV' || 'PROD'
+   * @property {string} USER_TEMPLATE
    */
   const ENV = {
-    MODE: GM_getValue('ENV_MODE', 'PROD')
+    MODE: GM_getValue('ENV_MODE', 'PROD'),
+    USER_TEMPLATE: GM_getValue('ENV_USER_TEMPLATE')
   }
 
   if (ENV.MODE !== 'PROD') {
@@ -285,7 +290,7 @@
    */
   const tweetDataExtractors = {
     username: ({ tweetElement }) => findUserName({ tweetElement }), 
-    userid: ({ tweetElement }) => findUserID({ tweetElement }),
+    userId: ({ tweetElement }) => findUserID({ tweetElement }),
     tweetText: ({ tweetElement }) => findTweetText({ tweetElement }),
     mediaCount: ({ tweetElement }) => findMediaCount({ tweetElement }),
     link: ({ tweetElement }) => 'https://twitter.com' + tweetElement.querySelector('a[href*="/status/"]').getAttribute('href')
@@ -294,13 +299,15 @@
   /**
    * User-defined template for formatting tweet data.
    */
-  let userTemplate = `{{username}} ({{userid}})
-
-{{tweetText}}
-
-{{mediaCount}}
-
-{{link}}`;
+  const UserTemplate = ENV.USER_TEMPLATE || [
+    `{{username}} ({{userId}})`,
+    ``,
+    `{{tweetText}}`,
+    ``,
+    `{{mediaCount}}`,
+    ``,
+    `{{link}}`
+  ].join('\n')
 
   /**
    * Adds a copy button to a tweet element.
@@ -571,7 +578,7 @@
    * @returns {string} Formatted tweet data.
    */
   function formatTweet({ tweetElement }) {
-    let formatted = userTemplate.replace(/\\{{/g, '{').replace(/\\}}/g, '}');
+    let formatted = UserTemplate.replace(/\\{{/g, '{').replace(/\\}}/g, '}');
     formatted = formatted.replace(/{{(\w+)}}/g, (match, key) => {
       if (tweetDataExtractors[key]) {
         return tweetDataExtractors[key]({ tweetElement });
