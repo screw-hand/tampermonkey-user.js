@@ -25,11 +25,11 @@ The script is designed to be ready to use with no configuration needed. However,
 <!-- markdown table 2 columns -->
 |base|hover|
 |---|---|
-|![base](docs/imgs/1-base.png)|![hover](docs/imgs/2-hover.png)|
+|![base](https://raw.githubusercontent.com/screw-hand/tampermonkey-user.js/main/share-tweet-copy/docs/imgs/1-base.png)|![hover](https://raw.githubusercontent.com/screw-hand/tampermonkey-user.js/main/share-tweet-copy/docs/imgs/2-hover.png)|
 
 |click|paste|
 |---|---|
-|![click](docs/imgs/3-click.png)|![paste](docs/imgs/4-paste.png)|
+|![click](https://raw.githubusercontent.com/screw-hand/tampermonkey-user.js/main/share-tweet-copy/docs/imgs/3-click.png)|![paste](https://raw.githubusercontent.com/screw-hand/tampermonkey-user.js/main/share-tweet-copy/docs/imgs/4-paste.png)|
 
 ## Contributing
 Contributions are welcome! For bug reports or suggestions, please [open an issue](https://github.com/screw-hand/tampermonkey-user.js/issues/new) or submit a pull request on [GitHub](https://github.com/screw-hand/tampermonkey-user.js/issues/new).
