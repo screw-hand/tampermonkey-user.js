@@ -22,10 +22,10 @@ Share Tweet Copy is a Tampermonkey userscript that allows users to copy the text
 The script is designed to be ready to use with no configuration needed. However, if you need to customize the script, you can find the source code and contribute on [GitHub](https://github.com/screw-hand/tampermonkey-user.js/tree/main/share-tweet-copy).
 
 ## Screenshots
-![base](docs/imgs/1-base.png)
-![hover](docs/imgs/2-show.png)
-![click](docs/imgs/3-click.png)
-![paste](docs/imgs/4-paste.png)
+![base](docs/imgs/1-base.png =600x)
+![hover](docs/imgs/2-show.png =660x)
+![click](docs/imgs/3-click.png =660x)
+![paste](docs/imgs/4-paste.png =660x)
 
 ## Contributing
 Contributions are welcome! For bug reports or suggestions, please [open an issue](https://github.com/screw-hand/tampermonkey-user.js/issues/new) or submit a pull request on [GitHub](https://github.com/screw-hand/tampermonkey-user.js/issues/new).
