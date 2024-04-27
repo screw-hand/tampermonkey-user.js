@@ -14,15 +14,13 @@ Share Tweet Copy is a Tampermonkey userscript that allows users to copy the text
 
 ## Usage
 1. Navigate to a tweet on Twitter.com.
-2. Look for the "Copy Tweet" button that appears below each tweet.
-3. Click the button to copy the tweet's text to your clipboard.
-4. Paste the copied text into any text editor, document, or social media platform.
+2. Find the clipboard icon (📋) next to the tweet details; click to copy.
+3. Paste the text wherever needed.
 
 ## Configuration
 The script is designed to be ready to use with no configuration needed. However, if you need to customize the script, you can find the source code and contribute on [GitHub](https://github.com/screw-hand/tampermonkey-user.js/tree/main/share-tweet-copy).
 
 ## Screenshots
-<!-- markdown table 2 columns -->
 |base|hover|
 |---|---|
 |![base](https://raw.githubusercontent.com/screw-hand/tampermonkey-user.js/main/share-tweet-copy/docs/imgs/1-base.png)|![hover](https://raw.githubusercontent.com/screw-hand/tampermonkey-user.js/main/share-tweet-copy/docs/imgs/2-hover.png)|
