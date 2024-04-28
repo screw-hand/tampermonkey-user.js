@@ -81,6 +81,7 @@ https://twitter.com/sama/status/1779517913654808676
 - [ ] refactor: use `main` function, more emeerate configuration objects, and [template syntax](https://www.tampermonkey.net/documentation.php) as the need as we can.
 - [ ] repost tweet: add the `repost:` string with clipboard in begin. 
 - [ ] replay tweet: add the `replay:` string with clipboard in begin. 
+- [ ] perf: update cjk regx to use Unicode.
 - [ ] options: show mode => setting "how to display copy button", `always` / `hover`
 - [ ] options: copy mode => `text` / `image`
 - [ ] options: shortcuts => if web is `https://twitter.com/[userid]/status/*`, can use shortcuts to copy with notification.
