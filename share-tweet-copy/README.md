@@ -92,7 +92,7 @@ Contributions are welcome!
 - For bug reports or suggestions, please [open an issue](https://github.com/screw-hand/tampermonkey-user.js/issues/new).
 - For pull request, please make sure to read the [contributing guide](https://github.com/screw-hand/tampermonkey-user.js/blob/main/share-tweet-copy/CONTRIBUTING.md) before that.
 
-## Tanks
+## Thanks
 
 - [TabCopy](https://tabcopy.com)
 - [Immersive Translate](https://immersivetranslate.com/)
