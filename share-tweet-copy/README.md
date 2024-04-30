@@ -60,9 +60,19 @@ https://twitter.com/sama/status/1779517913654808676
 |![click](https://raw.githubusercontent.com/screw-hand/tampermonkey-user.js/main/share-tweet-copy/docs/imgs/3-click.png)|![paste](https://raw.githubusercontent.com/screw-hand/tampermonkey-user.js/main/share-tweet-copy/docs/imgs/4-paste.png)|
 
 
-## mobile
+## Mobile
 
+Even though many users install the Twitter app for their phones, the sharing format through the Twitter app can be quite plain and not very appealing. However, if you're using a mobile browser that supports the installation of the Tampermonkey extension, you can also use Share Tweet Copy. It will help you copy tweets with a better format, making them look nicer when you share them.
 
+**Recommended Browsers for Mobile with Extension Support**：
+
+**Android**
+- Any mobile browser on Android that supports the Tampermonkey extension can be used with `share-tweet-copy`.
+
+**iOS**
+- **Safari**: [App Store](https://apps.apple.com/no/app/safari/id1146562112) with [Userscripts](https://apps.apple.com/cn/app/userscripts/id1463298887).
+
+[A Better Ways to Run Tampermonkey Userscripts on iPhone or iPad](https://www.youtube.com/watch?v=fZrt4ZX-Xtk)
 
 ## Advanced
 
