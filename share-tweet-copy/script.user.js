@@ -101,4 +101,9 @@
    * This includes support for dark mode and styling for various states like hover and focus.
    */
 
+  const main  =() => {
+    console.log('hello, world!')
+  }
+
+  main()
 })();
