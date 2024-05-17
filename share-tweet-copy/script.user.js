@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.4.2
+// @version      0.4.3
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
-// @match        https://twitter.com/*, https://x.com/*
+// @match        https://twitter.com/*
+// @match        https://x.com/*
 // @icon         https://abs.twimg.com/favicons/twitter.3.ico
 // @grant        GM_addStyle
 // @grant        GM_getValue
@@ -19,6 +20,9 @@
 
   /**
    * Change Log
+   * 
+   * Version 0.4.3(2025-06-17)
+   * - fix match https://x.com 
    * 
    * Version 0.4.2(2025-05-17)
    *  - math https://x.com

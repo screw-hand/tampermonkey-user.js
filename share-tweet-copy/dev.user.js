@@ -4,7 +4,8 @@
 // @version      1.0
 // @description  Try to take over the world!
 // @author       You
-// @match        https://twitter.com/*, https://x.com/*
+// @match        https://twitter.com/*
+// @match        https://x.com/*
 // @icon         https://abs.twimg.com/favicons/twitter.3.ico
 // @require      https://update.greasyfork.org/scripts/482936/share-tweet-copy.user.js
 // @grant        GM_setValue
