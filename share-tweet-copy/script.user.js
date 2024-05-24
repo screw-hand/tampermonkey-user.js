@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.4.3
+// @version      0.4.4
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -21,7 +21,10 @@
   /**
    * Change Log
    * 
-   * Version 0.4.3(2025-06-17)
+   * Version 0.4.4(2025-05-25)
+   * - fix find tweet link
+   * 
+   * Version 0.4.3(2025-05-17)
    * - fix match https://x.com 
    * 
    * Version 0.4.2(2025-05-17)
@@ -300,7 +303,7 @@
     userId: ({ tweetElement }) => findUserID({ tweetElement }),
     tweetText: ({ tweetElement }) => findTweetText({ tweetElement }),
     mediaCount: ({ tweetElement }) => findMediaCount({ tweetElement }),
-    link: ({ tweetElement }) => 'https://twitter.com' + tweetElement.querySelector('a[href*="/status/"]').getAttribute('href')
+    link: ({ tweetElement }) => findLink({ tweetElement })
   };
 
   /**
@@ -576,6 +579,20 @@
     }
     return `${cameraEmoji} ${mediaCount} ${mediaWord}`;
     // ===
+  }
+
+  /**
+   * Finds the link from a tweet element.
+   * @param {Object} param - Object containing the tweet element.
+   * @param {Element} param.tweetElement - The tweet element.
+   * @returns {string} tweet link.
+   */
+  const findLink = ({ tweetElement }) => {
+    const StatusLink = [...tweetElement.querySelectorAll('a[href*="/status/"]')]
+      .map(a => a.href)
+      .find(link => /\/status\/\w+$/.test(link));
+
+    return StatusLink;
   }
 
   /**
