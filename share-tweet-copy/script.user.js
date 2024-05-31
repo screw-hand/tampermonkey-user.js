@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.4.4
+// @version      0.4.5
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -20,6 +20,9 @@
 
   /**
    * Change Log
+   * 
+   * Version 0.4.5(2025-05-31)
+   * - fix find tweet link with edit history. 
    * 
    * Version 0.4.4(2025-05-25)
    * - fix find tweet link
@@ -589,9 +592,9 @@
    */
   const findLink = ({ tweetElement }) => {
     const StatusLink = [...tweetElement.querySelectorAll('a[href*="/status/"]')]
-      .map(a => a.href)
-      .find(link => /\/status\/\w+$/.test(link));
-
+      ?.map(a => a.href)
+      ?.find(link => /\/status\/\w+(\/history)?$/.test(link))
+      ?.replace(/\/history$/, '')
     return StatusLink;
   }
 
