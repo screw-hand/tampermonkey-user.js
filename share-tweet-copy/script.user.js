@@ -21,16 +21,16 @@
   /**
    * Change Log
    * 
-   * Version 0.4.5(2025-05-31)
+   * Version 0.4.5(2024-05-31)
    * - fix find tweet link with edit history. 
    * 
-   * Version 0.4.4(2025-05-25)
+   * Version 0.4.4(2024-05-25)
    * - fix find tweet link
    * 
-   * Version 0.4.3(2025-05-17)
+   * Version 0.4.3(2024-05-17)
    * - fix match https://x.com 
    * 
-   * Version 0.4.2(2025-05-17)
+   * Version 0.4.2(2024-05-17)
    *  - math https://x.com
    * 
    * Version 0.4.1(2024-04-24)
