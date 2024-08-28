@@ -3,6 +3,7 @@
 // @namespace    https://screw-hand.com/
 // @version      0.1
 // @description  Clean up all dialogs on Hermchats
+// @author       screw-hand
 // @match        https://hermchats.com/chat*
 // @icon         https://hermchats.com/favicon.ico
 // @grant        GM_xmlhttpRequest
