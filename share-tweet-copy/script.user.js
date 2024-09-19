@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         share-tweet-copy
 // @namespace    https://screw-hand.com/
-// @version      0.4.5
+// @version      0.4.6
 // @description  support twitter to copy, easy to share.
 // @author       screw-hand
 // @match        https://twitter.com/*
@@ -21,6 +21,9 @@
   /**
    * Change Log
    * 
+   * Version 0.4.6(2024-09-19)
+   *  - fix dark mode style
+   *
    * Version 0.4.5(2024-05-31)
    * - fix find tweet link with edit history. 
    * 
