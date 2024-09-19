@@ -134,16 +134,14 @@
     /* --tooltip-transition-duration: 0.3s; */
   }
 
-  @media (prefers-color-scheme: dark) {
-    .copy-tweet-button {
-      --button-bg: #353434;
-      --button-hover-bg: #464646;
-      --button-text-color: #ccc;
-      --button-outline-color: #999;
-      --button-hover-text-color: #8bb9fe;
-      --tooltip-bg: #f4f3f3;
-      --tootip-text-color: #111;
-    }
+  html[style*="color-scheme: dark"] .copy-tweet-button {
+    --button-bg: #353434;
+    --button-hover-bg: #464646;
+    --button-text-color: #ccc;
+    --button-outline-color: #999;
+    --button-hover-text-color: #8bb9fe;
+    --tooltip-bg: #f4f3f3;
+    --tootip-text-color: #111;
   }
 
   .copy-tweet-button {
