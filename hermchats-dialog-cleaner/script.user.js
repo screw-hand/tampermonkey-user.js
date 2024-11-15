@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         Hermchats Dialog Cleaner
 // @namespace    https://screw-hand.com/
-// @version      0.2
+// @version      0.3
 // @description  Clean up all dialogs on Hermchats
 // @author       screw-hand
-// @match        https://hermchats.com/chat
-// @match        https://hermchats.com/chat*
-// @icon         https://hermchats.com/favicon.ico
+// @match        https://www.hermchats.com/*
+// @icon         https://www.hermchats.com/favicon.ico
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // ==/UserScript==
@@ -14,13 +13,13 @@
 (function () {
   "use strict";
 
-  const jtoken = localStorage.token; // 请确保这个token是最新的
+  const jtoken = localStorage.token;
 
   function getDialogs() {
     return new Promise((resolve, reject) => {
       GM_xmlhttpRequest({
         method: "POST",
-        url: "https://hermchats.com/gw/chatweb/gpt/dialogs",
+        url: "/gw/chatweb/gpt/dialogs",
         headers: {
           accept: "application/json, text/plain, */*",
           "content-type": "application/json",
@@ -48,7 +47,7 @@
     return new Promise((resolve, reject) => {
       GM_xmlhttpRequest({
         method: "POST",
-        url: "https://hermchats.com/gw/chatweb/gpt/delDialog",
+        url: "/gw/chatweb/gpt/delDialog",
         headers: {
           accept: "application/json, text/plain, */*",
           "content-type": "application/json",
