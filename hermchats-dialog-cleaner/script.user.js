@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hermchats Dialog Cleaner
 // @namespace    https://screw-hand.com/
-// @version      0.3
+// @version      0.4
 // @description  Clean up all dialogs on Hermchats
 // @author       screw-hand
 // @match        https://www.hermchats.com/*
@@ -32,10 +32,10 @@
             if (data.code === 200 && Array.isArray(data.data)) {
               resolve(data.data.map((item) => item.id));
             } else {
-              reject("Unexpected response format");
+              reject(data);
             }
           } else {
-            reject("Request failed");
+            reject(response);
           }
         },
         onerror: reject,
