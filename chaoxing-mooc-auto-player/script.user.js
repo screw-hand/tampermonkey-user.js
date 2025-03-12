@@ -20,10 +20,7 @@
 		}
 		console.log('init script successed!');
 
-
 		video.addEventListener('ended', function() {
-
-			function prevNextFocusNext () {
 				console.log('视频播放完成');
 				// 在这里可以执行视频播放完成后的操作
 				var nextButton = window.top.document.querySelector('#prevNextFocusNext')
@@ -34,9 +31,6 @@
 				} else {
 					console.log('未找到元素');
 				}
-			}
-
-			prevNextFocusNext()
+			});
 		});
-	});
 })();
