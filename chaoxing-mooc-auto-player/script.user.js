@@ -18,18 +18,20 @@
 		if (!video) {
 			return
 		}
-		console.log('init script successed!');
+
+		console.log('init script succeed!');
+
 
 		video.addEventListener('ended', function () {
-			console.log('视频播放完成');
+			console.log('video ended');
 			// 在这里可以执行视频播放完成后的操作
 			var nextButton = window.top.document.querySelector('#prevNextFocusNext')
 			// 触发点击事件
 			if (nextButton) {
 				nextButton.click();
-				console.log('点击事件已触发');
+				console.log('click event triggered');
 			} else {
-				console.log('未找到元素');
+				console.log('element not found');
 			}
 		});
 	});
