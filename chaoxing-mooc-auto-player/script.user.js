@@ -9,9 +9,9 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(function () {
 	'use strict';
-	window.addEventListener('load', function() {
+	window.addEventListener('load', function () {
 		console.log('init script');
 		var video = document.querySelector('video');
 		console.log('video', video);
@@ -20,17 +20,17 @@
 		}
 		console.log('init script successed!');
 
-		video.addEventListener('ended', function() {
-				console.log('视频播放完成');
-				// 在这里可以执行视频播放完成后的操作
-				var nextButton = window.top.document.querySelector('#prevNextFocusNext')
-				// 触发点击事件
-				if (nextButton) {
-					nextButton.click();
-					console.log('点击事件已触发');
-				} else {
-					console.log('未找到元素');
-				}
-			});
+		video.addEventListener('ended', function () {
+			console.log('视频播放完成');
+			// 在这里可以执行视频播放完成后的操作
+			var nextButton = window.top.document.querySelector('#prevNextFocusNext')
+			// 触发点击事件
+			if (nextButton) {
+				nextButton.click();
+				console.log('点击事件已触发');
+			} else {
+				console.log('未找到元素');
+			}
 		});
+	});
 })();
