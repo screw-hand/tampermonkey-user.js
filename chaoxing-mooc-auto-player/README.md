@@ -8,3 +8,6 @@
 
 ![](./docs/imgs/mediaAutoplay.png)
 
+**更新：更通用的方式，这里网站的播放视频源不太统一**
+
+![](docs/imgs/mediaAutoplay-all.jpg)
