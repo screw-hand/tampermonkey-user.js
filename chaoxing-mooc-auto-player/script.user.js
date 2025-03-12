@@ -21,6 +21,13 @@
 
 		console.log('init script succeed!');
 
+		// fn0: 自动播放
+		try {
+			video.play();
+		} catch (error) {
+			console.log('auto play failed', error);
+		}
+
 		// fn1: 自动点击下一节
 		video.addEventListener('ended', function () {
 			console.log('video ended');
