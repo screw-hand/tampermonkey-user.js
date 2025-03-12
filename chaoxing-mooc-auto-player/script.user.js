@@ -21,12 +21,10 @@
 
 		console.log('init script succeed!');
 
-
+		// fn1: 自动点击下一节
 		video.addEventListener('ended', function () {
 			console.log('video ended');
-			// 在这里可以执行视频播放完成后的操作
 			var nextButton = window.top.document.querySelector('#prevNextFocusNext')
-			// 触发点击事件
 			if (nextButton) {
 				nextButton.click();
 				console.log('click event triggered');
