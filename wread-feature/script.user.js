@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         微信读书Weread阅读综合功能版1
+// @name         微信读书Weread阅读综合功能版
 // @version      0.4.0
 // @author       GinWU
 // @contributor  !Sylas;SimonDW;Li_MIxdown;hubzy;xvusrmqj;LossJ;JackieZheng;das2m;harmonyLife
