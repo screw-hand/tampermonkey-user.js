@@ -2,7 +2,7 @@
 // @name         微信读书Weread阅读综合功能版1
 // @version      0.4.0
 // @author       GinWU
-// @contributor  SimonDW;Li_MIxdown;hubzy;xvusrmqj;LossJ;JackieZheng;das2m;harmonyLife
+// @contributor  !Sylas;SimonDW;Li_MIxdown;hubzy;xvusrmqj;LossJ;JackieZheng;das2m;harmonyLife
 // @namespace    https://screw-hand.com/
 // @description  微信读书的阅读字体修改为苍耳今楷，加减宽度，鼠标离开显示隐藏导航栏、功能栏、滚动条，多档滚动速度，自动翻页，仅适配weread.qq.com站点
 // @match        https://weread.qq.com/web/reader/*
