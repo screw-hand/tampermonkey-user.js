@@ -15,7 +15,8 @@
 (function() {
   'use strict';
   /**
-   *  Include external JS scripts here for easy switching.
+   * Include external JS scripts here for easy switching.
+   * Move it to the UserScript.
    */
   // @require      https://update.greasyfork.org/scripts/482936/share-tweet-copy.user.js
   // @require      file:///Users/wu/Documents/code/tampermonkey-user.js/share-tweet-copy/script.user.js

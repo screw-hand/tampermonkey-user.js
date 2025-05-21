@@ -5,14 +5,15 @@
 // @description  Try to take over the world!
 // @author       You
 // @match        *://*/*
-
 // ==/UserScript==
 
 (function() {
   'use strict';
   /**
    *  Include external JS scripts here for easy switching.
+   *  Move it to the UserScript.
    */
   // @require      path/to/local/script.js
+  
 	console.log('DEV local');
 })();
