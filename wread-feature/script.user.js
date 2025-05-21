@@ -40,6 +40,64 @@ GM_addStyle(`
 .readerAIChatPanel {
   right: 125px; left: initial;
 }
+
+.readerAIChatPanel_header {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	grid-template-rows: auto auto;
+	grid-template-areas:
+		"title    button_full"
+		"subtitle button_close";
+	align-items: center;
+	column-gap: 15px;
+    padding: 8px 15px;
+}
+.readerAIChatPanel_header_title {
+	grid-area: title;
+	justify-self: start;
+}
+.readerAIChatPanel_header_subtitle {
+	grid-area: subtitle;
+	justify-self: start;
+}
+
+.readerAIChatPanel_header_btn_full,
+.readerAIChatPanel_header_btn_close {
+	margin: 4px 0;
+	padding: 0 20px;
+	background: #3a3a3a;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.readerAIChatPanel_header_btn_full {
+	grid-area: button_full;
+}
+
+.readerAIChatPanel_header_btn_close {
+	grid-area: button_close;
+}
+
+.readerAIChatPanel_fullscreen {
+	z-index: 9999 !important;
+	left: 0 !important;
+	top: 0 !important;
+	right: 0 !important;
+	bottom: 0 !important;
+	width: 100vw !important;
+	height: 100vh !important;
+	margin: 0 !important;
+	border-radius: 0 !important;
+	max-width: 100vw !important;
+	max-height: 100vh !important;
+}
 `);
 
 const ElementUtils = {
@@ -157,6 +215,40 @@ async function init() {
 		window.localStorage.getItem('setWidth')
 	)
 
+	let header = await waitElement(".readerAIChatPanel_header", 30000);
+	if (!header) {
+		console.warn('".readerAIChatPanel_header" not found, cannot add buttons.');
+		return;
+	}
+
+	// 全屏按钮
+	let btnFull = createElement('button');
+	btnFull.innerText = '全屏';
+	btnFull.className = 'readerAIChatPanel_header_btn_full'; // 类名用于grid-area
+	btnFull.onclick = function() {
+		let panel = $css('.readerAIChatPanel .readerAIChatPanel');
+		if(panel) {
+			panel.classList.toggle('readerAIChatPanel_fullscreen');
+			if(panel.classList.contains('readerAIChatPanel_fullscreen')) {
+				btnFull.innerText = '还原';
+			} else {
+				btnFull.innerText = '全屏';
+			}
+		}
+	};
+
+	// 关闭按钮
+	let btnClose = createElement('button');
+	btnClose.innerText = '关闭';
+	btnClose.className = 'readerAIChatPanel_header_btn_close'; // 类名用于grid-area
+	btnClose.onclick = function() {
+		let mask = $css('.wr_mask.wr_mask_Show');
+		if(mask) mask.click();
+	};
+
+	// 插入到 header
+	header.appendChild(btnFull);
+	header.appendChild(btnClose);
 
 	//   // 顶部导航栏优化
 	//   let last_scroll_top = getScrollTop();
@@ -195,8 +287,6 @@ function setWidth(width) {
   let div_content = $css(".app_content");
 	div_content.cssSet("max-width", width + "px");
 	div_top_bar.cssSet("max-width", width + "px");
-	console.log(div_content)
-	console.log(div_top_bar)
 	window.localStorage.setItem('setWidth', width);
 	let resize_event = new Event("resize");
 	window.dispatchEvent(resize_event);
@@ -366,7 +456,6 @@ function isExistElement(css_selector) {
 	}
 	return false;
 }
-
 async function waitElement(css_selector, max_wait_ms) {
 	/**
    * 等待指定元素出现
@@ -555,4 +644,13 @@ function pressKey(name) {
 	};
 
 	return pressKeyByCode(KeyNameToCode[name.toLowerCase()]);
+}
+
+
+function createElement(tagName, attributes) {
+	const elm = document.createElement(tagName);
+	for (const attr in attributes) {
+		elm.setAttribute(attr, attributes[attr]);
+	}
+	return elm;
 }
