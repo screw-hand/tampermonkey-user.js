@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         沉浸阅读（for微信读书)
+// @name         沉浸阅读（for微信读书）
 // @version      0.5.0
 // @author       GinWU
 // @contributor  !Sylas;SimonDW;Li_MIxdown;hubzy;xvusrmqj;LossJ;JackieZheng;das2m;harmonyLife;yehuda
