@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         微信读书Weread阅读综合功能版
-// @version      0.4.9
+// @name         沉浸阅读（for微信读书)
+// @version      0.5.0
 // @author       GinWU
 // @contributor  !Sylas;SimonDW;Li_MIxdown;hubzy;xvusrmqj;LossJ;JackieZheng;das2m;harmonyLife;yehuda
 // @namespace    https://screw-hand.com/
@@ -11,6 +11,11 @@
 // @grant        unsafeWindow
 // @license      MIT
 // ==/UserScript==
+
+/**
+ * fork from https://greasyfork.org/zh-CN/scripts/490065-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6weread%E9%98%85%E8%AF%BB%E7%BB%BC%E5%90%88%E5%8A%9F%E8%83%BD%E7%89%88
+ * and so as https://greasyfork.org/zh-CN/scripts/458095-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E5%8A%A0%E5%AE%BD%E5%8F%AF%E8%A7%86%E8%8C%83%E5%9B%B4%E5%92%8C%E5%87%A0%E4%B8%AA%E7%99%BD%E8%89%B2%E4%B8%BB%E9%A2%98%E7%9A%84%E6%8A%A4%E7%9C%BC%E6%A8%A1%E5%BC%8F
+ */
 
 GM_addStyle(`
 * {
