@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         微信读书Weread阅读综合功能版
-// @version      0.4.1
+// @version      0.4.9
 // @author       GinWU
-// @contributor  !Sylas;SimonDW;Li_MIxdown;hubzy;xvusrmqj;LossJ;JackieZheng;das2m;harmonyLife
+// @contributor  !Sylas;SimonDW;Li_MIxdown;hubzy;xvusrmqj;LossJ;JackieZheng;das2m;harmonyLife;yehuda
 // @namespace    https://screw-hand.com/
-// @description  微信读书的阅读字体修改为苍耳今楷，加减宽度，鼠标离开显示隐藏导航栏、功能栏、滚动条，多档滚动速度，自动翻页，仅适配weread.qq.com站点
+// @description  微信读书的阅读字体修改为苍耳今楷，加减宽度，鼠标离开显示隐藏导航栏、功能栏、滚动条，多档滚动速度，自动翻页，自定义宽度和主题（与原生深/浅主题互斥），仅适配weread.qq.com站点
 // @match        https://weread.qq.com/web/reader/*
 // @icon         https://weread.qq.com/favicon.ico
 // @grant        GM_addStyle
@@ -18,7 +18,7 @@ GM_addStyle(`
 }
 
 .readerControls {
-  height: 433px; margin-left: 0; left: initial; right: 20px; display: flex; flex-wrap: wrap; flex-direction: column; width: initial; right: 10px; bottom: 20px;
+  height: 433px; margin-left: 0; left: initial; right: 20px; display: flex; flex-wrap: wrap; flex-direction: column; width: initial; right: 10px; bottom: 20px; padding-left: 200px;
 }
 
 .readerTopBar, .readerControls {
@@ -100,6 +100,18 @@ GM_addStyle(`
 }
 `);
 
+const colors = [
+    { bg: 'rgba(236, 217, 172, 0.4)', rbg: 'rgba(243, 227, 188, 1)', bgb: 'rgba(251, 239, 209, 0.5)', bgbBar: '#dbdbdb', white: true },
+    {
+        bg: 'rgba(102, 128, 102, 0.1)',
+        rbg: 'rgba(65, 94, 62, 1)',
+        bgb: 'rgba(102, 128, 102, 0.25)',
+        bgbBar: '#dbdbdb',
+        white: true
+    },
+    { bg: '#b5b5b5', rbg: '#c5c5c5', bgb: '#dbdbdb', bgbBar: '#dbdbdb', white: true }
+];
+
 const ElementUtils = {
 	cssGet: (tar_elm, property) => {
 		/**
@@ -169,6 +181,233 @@ let btn_scroll_off = $css("#scroll-off");
 let btn_turn_tips = $css("#turn-page-tips");
 let scroll_speed = 0;
 
+let styleElementForCustomTheme = null;
+
+function getStyleStr_customTheme() {
+    let style = `
+    /* 通用样式覆盖，确保在任何情况下均优先显示自定义主题 */
+    html body.wr-mode-0, html body.wr-mode-1, html body.wr-mode-2 {
+        transition: background-color 0.3s ease-in-out !important;
+    }
+    `;
+
+    for (let i = 0; i < colors.length; i++) {
+        const color = colors[i];
+        style += `
+          html body.wr-mode-${i} {
+              background-color:${color.bg} !important;
+          }
+          html body.wr-mode-${i} .readerTopBar {
+              background-color:${color.rbg} !important;
+          }
+          html body.wr-mode-${i} .readerControls_item,
+          html body.wr-mode-${i} .readerControls_fontSize,
+          html body.wr-mode-${i} .app_content,
+          html body.wr-mode-${i} #custom-theme-toggle-btn /* 确保自定义按钮也应用背景 */
+          {
+              background-color:${color.bgb} !important;
+          }
+          html body.wr-mode-${i} .readerCatalog {
+            background-color:${color.bgbBar} !important;
+          }
+          html body.wr-mode-${i} .chapterItem_link {
+              border: dashed #2a2a2a !important;
+              border-width: 0 0 2px !important;
+          }
+          html body.wr-mode-${i} .chapterItem_text {
+              font-size: 18px !important;
+          }
+          html body.wr-mode-${i} .readerNotePanel {
+            background-color:${color.bgbBar} !important;
+          }
+          html body.wr-mode-${i} .sectionListItem_divider {
+              border: dashed #2a2a2a !important;
+              border-width: 0 0 2px !important;
+          }
+          html body.wr-mode-${i} .readerNotePanelBottomBar {
+              border: solid ${color.bgbBar} !important;
+              border-width: 0 0 2px !important;
+              background-color:${color.rbg} !important;
+          }
+
+          /* 阅读区域内容样式 */
+          html body.wr-mode-${i} .readerChapterContent {
+              color: ${color.white ? '#333333' : '#e8e8e8'} !important;
+          }
+
+          /* 章节标题样式 */
+          html body.wr-mode-${i} .readerChapterContent .chapterTitle {
+              color: ${color.white ? '#000000' : '#ffffff'} !important;
+          }
+        `;
+        if (color.white) {
+            style += `
+              html body.wr-mode-${i} .readerFooter_button,
+              html body.wr-mode-${i} .readerFooter_button:hover,
+              html body.wr-mode-${i} #custom-theme-toggle-btn /* 自定义按钮文字颜色 */
+              {
+                  color:#2a2a2a !important;
+              }
+              html body.wr-mode-${i} .readerFooter_button {
+                  background-color:${color.bg} !important;
+              }
+            `;
+        } else {
+             style += `
+              html body.wr-mode-${i} #custom-theme-toggle-btn /* 自定义按钮文字颜色 */
+              {
+                  color:#b9b9ba !important;
+              }
+            `;
+        }
+    }
+    return style;
+}
+
+function applyCustomThemeStyles() {
+    const styleContent = getStyleStr_customTheme();
+    if (!styleElementForCustomTheme) {
+        styleElementForCustomTheme = document.createElement('style');
+        styleElementForCustomTheme.id = 'custom-weread-styles-by-yehuda';
+        styleElementForCustomTheme.setAttribute('data-priority', 'highest');
+        document.head.appendChild(styleElementForCustomTheme);
+    }
+    styleElementForCustomTheme.textContent = styleContent;
+
+    document.head.appendChild(styleElementForCustomTheme);
+
+    console.log("自定义主题样式已应用，共计样式规则数量：" +
+                (styleElementForCustomTheme.sheet ? styleElementForCustomTheme.sheet.cssRules.length : "未知"));
+}
+
+function removeCustomStyles() {
+    const body = $css("body");
+    if (!body) return;
+    colors.forEach((color, index) => {
+        body.classList.remove('wr-mode-' + index);
+    });
+    if (localStorage.getItem('wr-custom-mode')) {
+        localStorage.removeItem('wr-custom-mode');
+    }
+    body.removeAttribute('data-custom-color-mode');
+
+    // 可选：如果想在移除时也移除style标签内容，但通常保留规则让切换回来更快
+    if (styleElementForCustomTheme) {
+      styleElementForCustomTheme.textContent = '';
+    }
+}
+
+function changeCustomThemeMode(modeIndexStr, currentModeIndexStr = null) {
+    const body = $css("body");
+    if(!body) return;
+    const modeIndex = parseInt(modeIndexStr);
+
+    colors.forEach((_, index) => body.classList.remove('wr-mode-' + index));
+
+    body.classList.remove('wr_darkTheme');
+    if (!isNaN(modeIndex) && colors[modeIndex]) {
+        body.classList.add('wr-mode-' + modeIndex);
+        body.setAttribute('data-custom-color-mode', modeIndex.toString());
+        localStorage.setItem('wr-custom-mode', modeIndex.toString());
+
+        console.log(`已应用自定义主题 ${modeIndex}，当前body类: ${body.classList.toString()}`);
+
+        document.documentElement.style.display = 'none';
+        void document.documentElement.offsetHeight;
+        document.documentElement.style.display = '';
+    } else {
+        console.warn(`微信读书脚本：无效的自定义模式索引: ${modeIndexStr}`);
+        removeCustomStyles();
+    }
+}
+
+function loadCustomThemeFeature() {
+    if (!div_controls) {
+        console.warn("微信读书脚本：.readerControls 未找到，无法添加自定义主题按钮。");
+        return;
+    }
+
+    applyCustomThemeStyles();
+
+    const customThemeButton = createElement('button', {
+        title: '切换自定义主题',
+        id: 'custom-theme-toggle-btn',
+        class: 'readerControls_item'
+    });
+    customThemeButton.textContent = '主题';
+
+    const NATIVE_WHITE_THEME_CLASS = 'wr_whiteTheme';
+
+    customThemeButton.onclick = async () => {
+        const body = $css("body");
+        if (!body) {
+            console.warn("微信读书脚本：未找到 body 元素。");
+            return;
+        }
+
+        customThemeButton.style.transform = "scale(1.1)";
+        customThemeButton.style.transition = "transform 0.2s";
+        setTimeout(() => {
+            customThemeButton.style.transform = "";
+        }, 200);
+
+        if (!body.classList.contains(NATIVE_WHITE_THEME_CLASS)) {
+            console.log(`深色主题不支持自定义主题切换。当前类: ${body.classList.toString()}`);
+            alert("请先手动切换为原生浅色主题，再使用自定义主题功能。");
+            return;
+        }
+
+        let nextCustomModeIndex = 0;
+        const currentAppliedCustomModeStr = body.getAttribute('data-custom-color-mode');
+        if (currentAppliedCustomModeStr !== null) {
+            const currentAppliedIndex = parseInt(currentAppliedCustomModeStr);
+            if (!isNaN(currentAppliedIndex) && currentAppliedIndex >= 0 && currentAppliedIndex < colors.length) {
+                nextCustomModeIndex = (currentAppliedIndex + 1) % colors.length;
+            } else {
+                console.warn(`Invalid 'data-custom-color-mode' value: ${currentAppliedCustomModeStr}. Resetting to first custom theme.`);
+                nextCustomModeIndex = 0;
+            }
+        } else {
+            console.log("No prior custom theme applied (data-custom-color-mode is null). Applying first custom theme.");
+            nextCustomModeIndex = 0;
+        }
+
+        applyCustomThemeStyles();
+
+        changeCustomThemeMode(nextCustomModeIndex.toString(), currentAppliedCustomModeStr);
+    };
+
+    div_controls.appendChild(customThemeButton);
+
+    // 定义统一的原生主题按钮点击处理函数，以便复用和移除/添加监听器
+    const nativeThemeButtonClickHandler = () => {
+        console.log("原生主题按钮点击，移除自定义主题样式。");
+        removeCustomStyles();
+    };
+
+    setTimeout(() => {
+        const initialNativeDarkButton = document.querySelector('[title="深色"]');
+        const initialNativeLightButton = document.querySelector('[title="浅色"]');
+
+        // 当原生"切换到深色"按钮被点击（即从浅色变为深色）时，移除自定义主题
+        if (initialNativeDarkButton) {
+            initialNativeDarkButton.addEventListener('click', nativeThemeButtonClickHandler);
+            console.log("Added click listener to initialNativeDarkButton");
+        }
+        // 当原生"切换到浅色"按钮被点击（即从深色变为浅色）时，移除自定义主题
+        if (initialNativeLightButton) {
+            initialNativeLightButton.addEventListener('click', nativeThemeButtonClickHandler);
+            console.log("Added click listener to initialNativeLightButton");
+        }
+    }, 500);
+
+    // 从 localStorage 初始化主题
+    const localMode = localStorage.getItem('wr-custom-mode');
+    if (localMode !== null && colors[parseInt(localMode)]) {
+        changeCustomThemeMode(localMode);
+    }
+}
+
 async function init() {
 	"use strict";
 
@@ -211,14 +450,15 @@ async function init() {
 		btn_scroll_on.innerHTML = "播放X0";
 	};
 
-	setWidth(
-		window.localStorage.getItem('setWidth')
-	)
+    // 应用localStorage中的宽度设置
+    setWidth(window.localStorage.getItem('setWidth'));
+
+    // 加载自定义主题相关功能
+    loadCustomThemeFeature();
 
 	let header = await waitElement(".readerAIChatPanel_header", 30000);
 	if (!header) {
-		console.warn('".readerAIChatPanel_header" not found, cannot add buttons.');
-		return;
+		console.warn('.readerAIChatPanel_header" not found, cannot add buttons.');
 	}
 
 	// 全屏按钮
@@ -246,32 +486,28 @@ async function init() {
 		if(mask) mask.click();
 	};
 
-	// 插入到 header
-	header.appendChild(btnFull);
-	header.appendChild(btnClose);
-
-	//   // 顶部导航栏优化
-	//   let last_scroll_top = getScrollTop();
-	//   let opacity = 1;
-	//   window.onscroll = () => {
-	//     let curr_scroll_top = getScrollTop();
-	//     if (curr_scroll_top < last_scroll_top) {
-	//       // 上划显示
-	//       opacity = opacity + 0.05 >= 1 ? 1 : opacity + 0.05;
-	//     } else {
-	//       // 上划隐藏
-	//       opacity = opacity - 0.03 <= 0 ? 0 : opacity - 0.03;
-	//     }
-	//     div_top_bar.cssSet("opacity", opacity);
-	//     div_controls.cssSet("opacity", opacity);
-	//     last_scroll_top = curr_scroll_top;
-	//   };
-};
+  // 只有当 header 存在时才添加按钮
+  if (header) {
+    header.appendChild(btnFull);
+    header.appendChild(btnClose);
+  }
+}; // init 函数结束括号
 init();
 
 function changeWidth(isAdd, step) {
 	step = typeof step === "undefined" ? 60 : step
-	let width = Number($css(".app_content").cssGet("max-width").replace("px", ""));
+	let currentMaxWidth = $css(".app_content").cssGet("max-width");
+    let width = 0;
+    if (currentMaxWidth && currentMaxWidth !== "none" && currentMaxWidth.endsWith("px")) {
+        width = Number(currentMaxWidth.replace("px", ""));
+    } else {
+        const appContentDiv = $css(".app_content");
+        if (appContentDiv) {
+             width = appContentDiv.clientWidth;
+        }
+        if (!width || width <=0) width = 1000;
+    }
+
 	if (isAdd) {
 		width += step;
 	} else {
@@ -284,10 +520,22 @@ function setWidth(width) {
 	if (!width) {
 		return;
 	}
-  let div_content = $css(".app_content");
-	div_content.cssSet("max-width", width + "px");
-	div_top_bar.cssSet("max-width", width + "px");
-	window.localStorage.setItem('setWidth', width);
+  const numericWidth = parseFloat(width);
+  if (isNaN(numericWidth) || numericWidth <= 0) {
+      console.warn("setWidth: 无效的宽度值", width);
+      return;
+  }
+
+  let div_content_el = $css(".app_content");
+  let div_top_bar_el = $css(".readerTopBar");
+
+  if (div_content_el) {
+    div_content_el.cssSet("max-width", numericWidth + "px");
+  }
+  if (div_top_bar_el) {
+	  div_top_bar_el.cssSet("max-width", numericWidth + "px");
+  }
+	window.localStorage.setItem('setWidth', numericWidth.toString());
 	let resize_event = new Event("resize");
 	window.dispatchEvent(resize_event);
 }
@@ -456,6 +704,15 @@ function isExistElement(css_selector) {
 	}
 	return false;
 }
+
+function createElement(tagName, attributes) {
+	const elm = document.createElement(tagName);
+	for (const attr in attributes) {
+		elm.setAttribute(attr, attributes[attr]);
+	}
+	return elm;
+}
+
 async function waitElement(css_selector, max_wait_ms) {
 	/**
    * 等待指定元素出现
@@ -644,13 +901,4 @@ function pressKey(name) {
 	};
 
 	return pressKeyByCode(KeyNameToCode[name.toLowerCase()]);
-}
-
-
-function createElement(tagName, attributes) {
-	const elm = document.createElement(tagName);
-	for (const attr in attributes) {
-		elm.setAttribute(attr, attributes[attr]);
-	}
-	return elm;
 }
