@@ -1,5 +1,13 @@
 # 沉浸阅读（for微信读书）
 
+# 安装
+
+[greasyfork链接](https://greasyfork.org/en/scripts/536846-%E6%B2%89%E6%B5%B8%E9%98%85%E8%AF%BB-for%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6)
+
+# 为什么？
+
+[我缝合了一个油猴脚本，使用微信读书沉浸式阅读，为了纯粹的阅读体验。](https://linux.do/t/topic/671801)
+
 > 为了纯粹的【全屏阅读】体验！
 
 一句话：本脚本基于以下两个油猴脚本的思路，感谢两位作者的付出和开发。
@@ -34,8 +42,25 @@
 
 # 技巧
 
-## 阅读布局
+## 纯粹的全屏阅读
+
+一句话：双开pwa，阅读+ai问书，独立窗口，最大化阅读区域。
+
+使用浏览器安装pwa，独立窗口打开微信读书web版；
+可隐藏浏览器顶部的工具栏，最大化阅读区域。
+
+- chrome安装pwa
+![tip1-chrome-pwa](docs/tip1-chrome-pwa.png)
+
+- edge安装pwa
+![tip1-edge-pwa](docs/tip1-edge-pwa.png)
+
+- 双开pwa
+
+![tip1-pwa](docs/tip1-pwa.png)
+
 - main: 阅读——宽度手动调整到占满
 - side：ai问书--使用“全屏”模式
 
+- 最终效果
 ![alt text](docs/tip1-immersive-read.png)
